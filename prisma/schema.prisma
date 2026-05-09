@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String
+  role      Role     @default(WORKER)
+  city      String
+  locality  String?
+  lat       Float?
+  lng       Float?
+  createdAt DateTime @default(now())
+  worker    Worker?
+  hirer     Hirer?
+  reviews   Review[] @relation("ReviewAuthor")
+}
+
+enum Role {
+  WORKER
+  HIRER
+  ADMIN
+}
+
+model Worker {
+  id             String        @id @default(cuid())
+  userId         String        @unique
+  user           User          @relation(fields: [userId], references: [id])
+  trade          Trade
+  experience     Int
+  dailyWage      Int
+  bio            String?
+  languages      String[]
+  isAvailable    Boolean       @default(true)
+  isVerified     Boolean       @default(false)
+  profilePhoto   String?
+  itiCertificate String?
+  portfolio      String[]
+  rating         Float         @default(0)
+  totalReviews   Int           @default(0)
+  totalJobs      Int           @default(0)
+  isFeatured     Boolean       @default(false)
+  applications   Application[]
+  reviews        Review[]
+}
+
+model Hirer {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
+  type        HirerType @default(HOMEOWNER)
+  companyName String?
+  jobs        Job[]
+}
+
+enum HirerType {
+  HOMEOWNER
+  CONTRACTOR
+  COMPANY
+}
+
+model Job {
+  id            String        @id @default(cuid())
+  hirerId       String
+  hirer         Hirer         @relation(fields: [hirerId], references: [id])
+  title         String
+  trade         Trade
+  jobType       JobType
+  city          String
+  locality      String
+  lat           Float?
+  lng           Float?
+  duration      String
+  budgetPerDay  Int
+  description   String
+  isUrgent      Boolean       @default(false)
+  isActive      Boolean       @default(true)
+  contactPref   String
+  createdAt     DateTime      @default(now())
+  expiresAt     DateTime
+  applications  Application[]
+}
+
+enum JobType {
+  ONE_TIME
+  WEEKLY
+  FULLTIME
+}
+
+model Application {
+  id        String    @id @default(cuid())
+  jobId     String
+  workerId  String
+  job       Job       @relation(fields: [jobId], references: [id])
+  worker    Worker    @relation(fields: [workerId], references: [id])
+  status    AppStatus @default(PENDING)
+  createdAt DateTime  @default(now())
+}
+
+enum AppStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  workerId  String
+  authorId  String
+  worker    Worker   @relation(fields: [workerId], references: [id])
+  author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+enum Trade {
+  ELECTRICIAN
+  PLUMBER
+  CARPENTER
+  WELDER
+  PAINTER
+  MASON
+  HVAC_TECH
+  MECHANIC
+  OTHER
+}

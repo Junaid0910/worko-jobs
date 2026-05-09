@@ -1,0 +1,21 @@
+{
+  "name": "KaamMitr",
+  "short_name": "KaamMitr",
+  "description": "Hyperlocal skilled trades job board for India",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#E8410A",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
