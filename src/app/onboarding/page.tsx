@@ -4,11 +4,56 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { User, ArrowRight, ChevronLeft, MapPin, Hammer } from "lucide-react";
+import { User, ArrowRight, ChevronLeft, MapPin, Hammer, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function OnboardingPage() {
+  const { data: session, update } = useSession();
+  const router = useRouter();
+  
   const [role, setRole] = useState<"WORKER" | "HIRER" | null>(null);
   const [step, setStep] = useState(1);
+  
+  const [name, setName] = useState(session?.user?.name || "");
+  const [city, setCity] = useState("");
+  const [trade, setTrade] = useState("");
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async () => {
+    if (!name || !city || (role === "WORKER" && !trade)) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError("");
+
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, name, city, trade }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to complete onboarding");
+      }
+
+      // Update session to reflect new role
+      await update({ role: role });
+      
+      router.push(data.redirect || "/");
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-surface mesh-gradient">
@@ -69,7 +114,7 @@ export default function OnboardingPage() {
               >
                 <button 
                   onClick={() => { setRole(null); setStep(1); }}
-                  className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary transition-colors bg-secondary/5 px-4 py-2 rounded-full"
+                  className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted hover:text-primary transition-colors bg-secondary/5 px-4 py-2 rounded-full w-fit"
                 >
                   <ChevronLeft size={16} /> Back to selection
                 </button>
@@ -82,34 +127,66 @@ export default function OnboardingPage() {
                     <p className="text-lg text-muted font-medium">We'll use this to personalize your experience.</p>
                   </div>
                   
+                  {error && (
+                    <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-sm font-bold border border-red-500/20">
+                      {error}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
                     <div className="space-y-3">
                       <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Full Name</label>
-                      <input type="text" placeholder="e.g. Rajesh Kumar" className="w-full bg-white/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all rounded-2xl" />
+                      <input 
+                        type="text" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="e.g. Rajesh Kumar" 
+                        className="w-full bg-white/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all rounded-2xl" 
+                      />
                     </div>
                     <div className="space-y-3">
                       <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Primary City</label>
                       <div className="relative">
                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-primary" size={20} />
-                        <input type="text" placeholder="e.g. Mumbai" className="w-full bg-white/50 border-2 border-secondary/5 px-14 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all rounded-2xl" />
+                        <input 
+                          type="text" 
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          placeholder="e.g. Mumbai" 
+                          className="w-full bg-white/50 border-2 border-secondary/5 px-14 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all rounded-2xl" 
+                        />
                       </div>
                     </div>
                     {role === "WORKER" && (
                       <div className="space-y-3 md:col-span-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Your Primary Trade</label>
-                        <select className="w-full bg-surface/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all appearance-none rounded-2xl">
-                          <option>Select your skill...</option>
-                          <option>Electrician</option>
-                          <option>Plumber</option>
-                          <option>Carpenter</option>
-                          <option>Painter</option>
+                        <select 
+                          value={trade}
+                          onChange={(e) => setTrade(e.target.value)}
+                          className="w-full bg-surface/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all appearance-none rounded-2xl"
+                        >
+                          <option value="">Select your skill...</option>
+                          <option value="ELECTRICIAN">Electrician</option>
+                          <option value="PLUMBER">Plumber</option>
+                          <option value="CARPENTER">Carpenter</option>
+                          <option value="PAINTER">Painter</option>
+                          <option value="MASON">Mason</option>
+                          <option value="OTHER">Other</option>
                         </select>
                       </div>
                     )}
                   </div>
 
-                  <button className="w-full bg-secondary text-white py-6 md:py-8 text-xl font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-4 rounded-2xl shadow-premium">
-                    COMPLETE PROFILE <ArrowRight size={28} />
+                  <button 
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    className="w-full bg-secondary text-white py-6 md:py-8 text-xl font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-4 rounded-2xl shadow-premium disabled:opacity-50"
+                  >
+                    {isLoading ? (
+                      <><Loader2 className="animate-spin" size={28} /> SAVING...</>
+                    ) : (
+                      <>COMPLETE PROFILE <ArrowRight size={28} /></>
+                    )}
                   </button>
                 </div>
               </motion.div>
@@ -147,4 +224,3 @@ function RoleCard({ title, desc, icon: Icon, onClick, highlight }: any) {
     </button>
   );
 }
-
