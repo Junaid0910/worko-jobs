@@ -1,17 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Plus, Briefcase, Users, Star, IndianRupee, MapPin, Clock, ChevronRight, UserCheck } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function HirerDashboard() {
-  const [activeJobs, setActiveJobs] = useState([
-    { id: "1", title: "Bathroom Plumber Needed", applicants: 8, budget: "800/day", status: "ACTIVE" },
-    { id: "2", title: "Electrician for Office", applicants: 3, budget: "1200/day", status: "ACTIVE" },
-  ]);
+  const { data: session } = useSession();
+  const [activeJobs, setActiveJobs] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!session?.user) return;
+    
+    const fetchJobs = async () => {
+      try {
+        const userId = (session.user as any).id;
+        const res = await fetch(`/api/jobs?userId=${userId}`);
+        const data = await res.json();
+        setActiveJobs(data);
+      } catch (err) {
+        console.error("Failed to fetch jobs", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchJobs();
+  }, [session]);
+
+  const totalApplicants = activeJobs.reduce((acc, job) => acc + (job.applications?.length || 0), 0);
 
   return (
     <main className="min-h-screen bg-surface">
@@ -44,7 +64,16 @@ export default function HirerDashboard() {
               <h3 className="text-3xl font-display font-black tracking-tighter uppercase border-l-8 border-secondary pl-6 text-heading">ACTIVE LISTINGS</h3>
               
               <div className="space-y-6">
-                {activeJobs.map((job) => (
+                {isLoading ? (
+                  <div className="flex justify-center items-center py-20">
+                    <div className="w-16 h-16 border-4 border-secondary border-t-primary rounded-full animate-spin"></div>
+                  </div>
+                ) : activeJobs.length === 0 ? (
+                  <div className="text-center py-20 bg-surface/50 border-2 border-secondary/10 rounded-3xl">
+                    <h3 className="text-2xl font-display font-black text-heading">NO JOBS POSTED YET</h3>
+                    <p className="text-muted mt-2">Create your first job listing to get started.</p>
+                  </div>
+                ) : activeJobs.map((job) => (
                   <motion.div 
                     key={job.id}
                     whileHover={{ scale: 1.01 }}
@@ -54,13 +83,13 @@ export default function HirerDashboard() {
                       <div className="space-y-1">
                         <h4 className="text-2xl font-display font-black tracking-tight text-heading">{job.title}</h4>
                         <div className="flex items-center gap-4 text-xs font-bold text-muted uppercase tracking-widest">
-                          <span className="flex items-center gap-1"><IndianRupee size={12} /> {job.budget}</span>
-                          <span className="flex items-center gap-1 text-green-500"><div className="w-2 h-2 bg-green-500 rounded-full" /> {job.status}</span>
+                          <span className="flex items-center gap-1"><IndianRupee size={12} /> {job.budgetPerDay}/day</span>
+                          <span className="flex items-center gap-1 text-green-500"><div className="w-2 h-2 bg-green-500 rounded-full" /> ACTIVE</span>
                         </div>
                       </div>
                       <div className="flex gap-4">
                         <div className="bg-surface px-4 py-2 border border-muted/10">
-                          <span className="text-lg font-black text-heading">{job.applicants}</span>
+                          <span className="text-lg font-black text-heading">{job.applications?.length || 0}</span>
                           <span className="text-[10px] font-bold text-muted uppercase tracking-widest ml-2">Applicants</span>
                         </div>
                       </div>
@@ -89,21 +118,21 @@ export default function HirerDashboard() {
                       <div className="w-10 h-10 bg-primary/10 text-primary flex items-center justify-center"><Briefcase size={20} /></div>
                       <span className="text-xs font-bold text-muted uppercase tracking-widest">Total Jobs</span>
                     </div>
-                    <span className="text-xl font-display font-black text-heading">14</span>
+                    <span className="text-xl font-display font-black text-heading">{activeJobs.length}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-secondary/10 text-heading flex items-center justify-center"><Users size={20} /></div>
-                      <span className="text-xs font-bold text-muted uppercase tracking-widest">Pros Hired</span>
+                      <span className="text-xs font-bold text-muted uppercase tracking-widest">Total Applicants</span>
                     </div>
-                    <span className="text-xl font-display font-black text-heading">8</span>
+                    <span className="text-xl font-display font-black text-heading">{totalApplicants}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-accent/20 text-primary-dark flex items-center justify-center"><Star size={20} /></div>
                       <span className="text-xs font-bold text-muted uppercase tracking-widest">Hirer Rating</span>
                     </div>
-                    <span className="text-xl font-display font-black text-heading">4.9</span>
+                    <span className="text-xl font-display font-black text-heading">New</span>
                   </div>
                 </div>
               </div>

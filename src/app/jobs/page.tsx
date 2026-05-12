@@ -7,44 +7,7 @@ import Footer from "@/components/Footer";
 import { Search, MapPin, Clock, ArrowRight, AlertCircle, TrendingUp, Briefcase, Filter, X } from "lucide-react";
 import Link from "next/link";
 
-const jobs = [
-  {
-    id: "1",
-    title: "Bathroom Renovation Overhaul",
-    trade: "PLUMBER",
-    type: "ONE_TIME",
-    budget: 800,
-    city: "Mumbai",
-    locality: "Bandra",
-    createdAt: "2 hours ago",
-    isUrgent: true,
-    hirerName: "Mrs. Sharma",
-  },
-  {
-    id: "2",
-    title: "Weekly Electrical Maintenance",
-    trade: "ELECTRICIAN",
-    type: "WEEKLY",
-    budget: 1500,
-    city: "Delhi",
-    locality: "Saket",
-    createdAt: "5 hours ago",
-    isUrgent: false,
-    hirerName: "Capital Towers",
-  },
-  {
-    id: "3",
-    title: "Furniture Workshop Assistant",
-    trade: "CARPENTER",
-    type: "FULLTIME",
-    budget: 1200,
-    city: "Bangalore",
-    locality: "Whitefield",
-    createdAt: "1 day ago",
-    isUrgent: false,
-    hirerName: "Urban Woodworks",
-  },
-];
+import { useEffect } from "react";
 
 import SuccessModal from "@/components/SuccessModal";
 
@@ -53,6 +16,24 @@ export default function JobsPage() {
   const [selectedType, setSelectedType] = useState("ALL");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch("/api/jobs");
+        const data = await res.json();
+        setJobs(data);
+      } catch (err) {
+        console.error("Failed to fetch jobs", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -246,9 +227,18 @@ export default function JobsPage() {
               </div>
             </div>
 
-            {/* Jobs Grid */}
-            <div className="grid grid-cols-1 gap-8">
-              {filteredJobs.map((job, i) => (
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="w-16 h-16 border-4 border-secondary border-t-primary rounded-full animate-spin"></div>
+              </div>
+            ) : filteredJobs.length === 0 ? (
+              <div className="text-center py-20 bg-surface/80 border-2 border-secondary/10 rounded-3xl">
+                <h3 className="text-2xl font-display font-black text-heading">NO JOBS FOUND</h3>
+                <p className="text-muted mt-2">Try adjusting your filters or search query.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-8">
+                {filteredJobs.map((job, i) => (
                 <motion.div
                   key={job.id}
                   initial={{ opacity: 0, x: -20 }}
@@ -284,7 +274,7 @@ export default function JobsPage() {
                       </h2>
                       <div className="flex flex-wrap items-center gap-6 text-[10px] font-black text-muted uppercase tracking-widest">
                         <span className="flex items-center gap-1.5"><MapPin size={16} className="text-primary" /> {job.locality}, {job.city}</span>
-                        <span className="flex items-center gap-1.5"><Clock size={16} className="text-primary" /> {job.createdAt}</span>
+                        <span className="flex items-center gap-1.5"><Clock size={16} className="text-primary" /> {new Date(job.createdAt).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
@@ -292,7 +282,7 @@ export default function JobsPage() {
                   <div className="md:w-72 flex flex-col justify-center gap-8 md:border-l border-secondary/5 md:pl-12 relative z-10">
                     <div className="space-y-1">
                       <div className="text-[9px] font-black text-muted uppercase tracking-widest">Daily Budget</div>
-                      <div className="text-4xl font-display font-black text-heading">₹{job.budget}</div>
+                      <div className="text-4xl font-display font-black text-heading">₹{job.budgetPerDay}</div>
                     </div>
                     
                     <button 
@@ -315,6 +305,7 @@ export default function JobsPage() {
                 </motion.div>
               ))}
             </div>
+            )}
 
             {/* Load More */}
             <div className="flex justify-center pt-8">

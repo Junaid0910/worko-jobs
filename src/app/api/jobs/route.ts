@@ -6,16 +6,25 @@ export async function GET(req: Request) {
   const trade = searchParams.get("trade");
   const city = searchParams.get("city");
   const isUrgent = searchParams.get("isUrgent") === "true";
+  const hirerId = searchParams.get("hirerId");
+  const userId = searchParams.get("userId");
 
   try {
     const where: any = { isActive: true };
     if (trade && trade !== "ALL") where.trade = trade;
     if (city) where.city = { contains: city, mode: 'insensitive' };
     if (isUrgent) where.isUrgent = true;
+    if (hirerId) where.hirerId = hirerId;
+    if (userId) {
+      where.hirer = { userId: userId };
+    }
 
     const jobs = await prisma.job.findMany({
       where,
-      include: { hirer: { include: { user: true } } },
+      include: { 
+        hirer: { include: { user: true } },
+        applications: true
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -29,32 +38,44 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     
+    if (!data.userId) {
+       return NextResponse.json({ error: "Unauthorized. Please log in." }, { status: 401 });
+    }
+
+    const hirer = await prisma.hirer.upsert({
+      where: { userId: data.userId },
+      update: {},
+      create: {
+        userId: data.userId,
+        type: "HOMEOWNER",
+      }
+    });
+
+    await prisma.user.update({
+       where: { id: data.userId },
+       data: { role: "HIRER" }
+    });
+
     const job = await prisma.job.create({
       data: {
-        hirerId: data.hirerId,
+        hirerId: hirer.id,
         title: data.title,
         trade: data.trade,
         jobType: data.jobType,
         city: data.city,
         locality: data.locality,
         duration: data.duration,
-        budgetPerDay: data.budgetPerDay,
+        budgetPerDay: parseInt(data.budgetPerDay),
         description: data.description,
         isUrgent: data.isUrgent || false,
-        contactPref: data.contactPref,
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        contactPref: "PHONE",
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       }
     });
 
-    // In production, trigger Email notifications to nearby workers here
-    /*
-    const workers = await prisma.worker.findMany({ where: { trade: data.trade, user: { city: data.city } } });
-    workers.forEach(worker => sendEmail(worker.user.email, "New Job Alert", ...));
-    */
-
     return NextResponse.json(job);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to post job" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to post job: " + error.message }, { status: 500 });
   }
 }

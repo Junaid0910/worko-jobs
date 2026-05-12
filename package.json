@@ -14,6 +14,8 @@
     "@tanstack/react-query": "^5.100.9",
     "axios": "^1.16.0",
     "cloudinary": "^2.10.0",
+    "firebase": "^12.13.0",
+    "firebase-admin": "^13.9.0",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
     "next": "16.2.6",
@@ -25,6 +27,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.75.0",
+    "resend": "^6.12.3",
     "twilio": "^6.0.2",
     "zod": "^4.4.3",
     "zustand": "^5.0.13"
