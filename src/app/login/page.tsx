@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Phone, Lock, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -17,53 +15,36 @@ export default function LoginPage() {
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!window.recaptchaVerifier && auth) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "invisible",
-      });
-    }
-  }, []);
-
   const handleSendOtp = async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-      const formattedPhone = phone.startsWith("+") ? phone : `+91${phone}`;
-      
-      const appVerifier = window.recaptchaVerifier;
-      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      
-      setConfirmationResult(confirmation);
-      setStep(2);
-    } catch (err: any) {
-      setError(err.message || "Failed to send OTP");
-    } finally {
+    // Mock OTP Sending since Firebase requires Blaze plan
+    setIsLoading(true);
+    setError("");
+    
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      setStep(2);
+      // Automatically pre-fill for demo purposes
+      setOtp("123456");
+    }, 1500);
   };
 
   const handleVerifyOtp = async () => {
-    if (!confirmationResult) return;
     try {
       setIsLoading(true);
       setError("");
       
-      const result = await confirmationResult.confirm(otp);
-      const idToken = await result.user.getIdToken();
-
       const response = await signIn("credentials", {
-        idToken,
+        phone,
+        otp,
         redirect: false,
       });
 
       if (response?.error) {
         setError("Invalid OTP or server error");
       } else {
-        router.push("/");
+        router.push("/dashboard/hirer"); // Redirect to dashboard
       }
     } catch (err: any) {
       setError(err.message || "Failed to verify OTP");
@@ -88,8 +69,6 @@ export default function LoginPage() {
             </h1>
             <p className="text-lg text-muted font-medium">Enter your credentials to continue.</p>
           </div>
-
-          <div id="recaptcha-container"></div>
 
           {error && (
             <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-sm font-bold text-center">
@@ -135,6 +114,7 @@ export default function LoginPage() {
                       className="w-full bg-surface/50 border-2 border-secondary/10 px-16 py-5 text-lg font-bold outline-none focus:border-primary transition-all tracking-[0.5em] text-center"
                     />
                   </div>
+                  <p className="text-xs text-center text-primary font-bold mt-2">Demo Mode: OTP is 123456</p>
                 </div>
                 <button 
                   onClick={handleVerifyOtp}
@@ -167,10 +147,4 @@ export default function LoginPage() {
       <Footer />
     </main>
   );
-}
-
-declare global {
-  interface Window {
-    recaptchaVerifier: any;
-  }
 }

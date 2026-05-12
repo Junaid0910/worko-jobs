@@ -1,23 +1,23 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
-import { adminAuth } from "@/lib/firebase-admin";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Firebase",
+      name: "OTP",
       credentials: {
-        idToken: { label: "ID Token", type: "text" },
+        phone: { label: "Phone", type: "text" },
+        otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.idToken) return null;
+        if (!credentials?.phone || !credentials?.otp) return null;
+
+        // Mock verification
+        if (credentials.otp !== "123456") return null;
 
         try {
-          const decodedToken = await adminAuth.verifyIdToken(credentials.idToken);
-          const phone = decodedToken.phone_number;
-
-          if (!phone) return null;
+          const phone = credentials.phone.startsWith("+") ? credentials.phone : `+91${credentials.phone}`;
 
           let user = await prisma.user.findUnique({
             where: { phone: phone },
@@ -40,7 +40,7 @@ const handler = NextAuth({
             role: user.role,
           };
         } catch (error) {
-          console.error("Firebase Auth Error:", error);
+          console.error("Auth Error:", error);
           return null;
         }
       },
