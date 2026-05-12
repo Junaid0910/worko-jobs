@@ -40,12 +40,12 @@ export default function Navbar() {
               <Link href="/" className="flex items-center gap-2 md:gap-3 group relative z-[110]">
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                  className="transition-transform duration-500 rounded-lg overflow-hidden flex items-center justify-center bg-white p-1"
+                  className="transition-transform duration-500 rounded-lg overflow-hidden flex items-center justify-center bg-white"
                 >
-                  <Image src="/logoimage.png" alt="Worko Logo" width={32} height={32} className="object-contain" />
+                  <Image src="/logoimage.png" alt="Worko Logo" width={48} height={48} className="object-cover" />
                 </motion.div>
                 <span className="text-xl md:text-2xl font-display font-extrabold tracking-tighter uppercase text-heading">
-                  Work<span className="text-primary">o</span>
+                  Wor<span className="text-primary">ko</span>
                 </span>
               </Link>
 

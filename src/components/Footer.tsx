@@ -17,11 +17,11 @@ export default function Footer() {
           
           <div className="space-y-10 lg:col-span-2">
             <Link href="/" className="flex items-center gap-4 group">
-              <div className="bg-white p-3 group-hover:rotate-12 transition-transform duration-500 rounded-lg flex items-center justify-center">
-                <Image src="/logoimage.png" alt="Worko Logo" width={40} height={40} className="object-contain" />
+              <div className="bg-white group-hover:rotate-12 transition-transform duration-500 rounded-lg flex items-center justify-center overflow-hidden">
+                <Image src="/logoimage.png" alt="Worko Logo" width={56} height={56} className="object-cover" />
               </div>
               <span className="text-4xl font-display font-extrabold tracking-tighter uppercase">
-                Work<span className="text-primary">o</span>
+                Wor<span className="text-primary">ko</span>
               </span>
             </Link>
             <p className="text-xl text-muted max-w-sm leading-relaxed font-medium">
