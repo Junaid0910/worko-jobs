@@ -21,7 +21,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!window.recaptchaVerifier) {
+    if (!window.recaptchaVerifier && auth) {
       window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
         size: "invisible",
       });
