@@ -3,11 +3,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   phone     String   @unique
   name      String
   role      Role     @default(WORKER)
@@ -28,8 +28,8 @@ enum Role {
 }
 
 model Worker {
-  id             String        @id @default(cuid())
-  userId         String        @unique
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String        @unique @db.ObjectId
   user           User          @relation(fields: [userId], references: [id])
   trade          Trade
   experience     Int
@@ -50,8 +50,8 @@ model Worker {
 }
 
 model Hirer {
-  id          String    @id @default(cuid())
-  userId      String    @unique
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String    @unique @db.ObjectId
   user        User      @relation(fields: [userId], references: [id])
   type        HirerType @default(HOMEOWNER)
   companyName String?
@@ -65,8 +65,8 @@ enum HirerType {
 }
 
 model Job {
-  id            String        @id @default(cuid())
-  hirerId       String
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  hirerId       String        @db.ObjectId
   hirer         Hirer         @relation(fields: [hirerId], references: [id])
   title         String
   trade         Trade
@@ -93,9 +93,9 @@ enum JobType {
 }
 
 model Application {
-  id        String    @id @default(cuid())
-  jobId     String
-  workerId  String
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  jobId     String    @db.ObjectId
+  workerId  String    @db.ObjectId
   job       Job       @relation(fields: [jobId], references: [id])
   worker    Worker    @relation(fields: [workerId], references: [id])
   status    AppStatus @default(PENDING)
@@ -109,9 +109,9 @@ enum AppStatus {
 }
 
 model Review {
-  id        String   @id @default(cuid())
-  workerId  String
-  authorId  String
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  workerId  String   @db.ObjectId
+  authorId  String   @db.ObjectId
   worker    Worker   @relation(fields: [workerId], references: [id])
   author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
   rating    Int

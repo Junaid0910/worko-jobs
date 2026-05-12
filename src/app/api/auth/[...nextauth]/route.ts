@@ -1,37 +1,48 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
+import { adminAuth } from "@/lib/firebase-admin";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "OTP",
+      name: "Firebase",
       credentials: {
-        phone: { label: "Phone", type: "text" },
-        otp: { label: "OTP", type: "text" },
+        idToken: { label: "ID Token", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.phone || !credentials?.otp) return null;
+        if (!credentials?.idToken) return null;
 
-        // In production, verify OTP with Twilio here
-        // For now, let's assume OTP is verified
-        
-        const user = await prisma.user.findUnique({
-          where: { phone: credentials.phone },
-        });
+        try {
+          const decodedToken = await adminAuth.verifyIdToken(credentials.idToken);
+          const phone = decodedToken.phone_number;
 
-        if (user) {
+          if (!phone) return null;
+
+          let user = await prisma.user.findUnique({
+            where: { phone: phone },
+          });
+
+          if (!user) {
+            user = await prisma.user.create({
+              data: {
+                phone: phone,
+                name: "New User",
+                city: "Unknown",
+              }
+            });
+          }
+
           return {
             id: user.id,
             name: user.name,
             phone: user.phone,
             role: user.role,
           };
+        } catch (error) {
+          console.error("Firebase Auth Error:", error);
+          return null;
         }
-
-        // If user doesn't exist, we'll handle onboarding separately or create a skeleton
-        // For standard NextAuth flow, return null or throw error
-        return null;
       },
     }),
   ],

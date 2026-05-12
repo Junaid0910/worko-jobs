@@ -9,19 +9,30 @@ cloudinary.config({
 
 export async function POST(req: Request) {
   try {
-    const timestamp = Math.round(new Date().getTime() / 1000);
-    const signature = cloudinary.utils.api_sign_request(
-      { timestamp },
-      process.env.CLOUDINARY_API_SECRET!
-    );
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
 
-    return NextResponse.json({
-      signature,
-      timestamp,
-      cloudName: process.env.CLOUDINARY_CLOUD_NAME,
-      apiKey: process.env.CLOUDINARY_API_KEY,
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: "worko" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
     });
+
+    return NextResponse.json({ url: (result as any).secure_url });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to generate upload signature" }, { status: 500 });
+    console.error("Upload error:", error);
+    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
   }
 }

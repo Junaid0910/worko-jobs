@@ -1,16 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Phone, Lock, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+        size: "invisible",
+      });
+    }
+  }, []);
+
+  const handleSendOtp = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+      const formattedPhone = phone.startsWith("+") ? phone : `+91${phone}`;
+      
+      const appVerifier = window.recaptchaVerifier;
+      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
+      
+      setConfirmationResult(confirmation);
+      setStep(2);
+    } catch (err: any) {
+      setError(err.message || "Failed to send OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!confirmationResult) return;
+    try {
+      setIsLoading(true);
+      setError("");
+      
+      const result = await confirmationResult.confirm(otp);
+      const idToken = await result.user.getIdToken();
+
+      const response = await signIn("credentials", {
+        idToken,
+        redirect: false,
+      });
+
+      if (response?.error) {
+        setError("Invalid OTP or server error");
+      } else {
+        router.push("/");
+      }
+    } catch (err: any) {
+      setError(err.message || "Failed to verify OTP");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-surface mesh-gradient">
@@ -29,6 +89,14 @@ export default function LoginPage() {
             <p className="text-lg text-muted font-medium">Enter your credentials to continue.</p>
           </div>
 
+          <div id="recaptcha-container"></div>
+
+          {error && (
+            <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-sm font-bold text-center">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-8">
             {step === 1 ? (
               <div className="space-y-6">
@@ -46,10 +114,11 @@ export default function LoginPage() {
                   </div>
                 </div>
                 <button 
-                  onClick={() => setStep(2)}
-                  className="w-full bg-secondary text-white py-6 text-xl font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3"
+                  onClick={handleSendOtp}
+                  disabled={isLoading || phone.length < 10}
+                  className="w-full bg-secondary text-white py-6 text-xl font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                 >
-                  SEND OTP <ArrowRight size={24} />
+                  {isLoading ? "SENDING..." : "SEND OTP"} <ArrowRight size={24} />
                 </button>
               </div>
             ) : (
@@ -67,8 +136,12 @@ export default function LoginPage() {
                     />
                   </div>
                 </div>
-                <button className="w-full bg-primary text-white py-6 text-xl font-display font-black uppercase tracking-widest hover:bg-primary-dark transition-all flex items-center justify-center gap-3">
-                  VERIFY & LOGIN <ShieldCheck size={24} />
+                <button 
+                  onClick={handleVerifyOtp}
+                  disabled={isLoading || otp.length < 6}
+                  className="w-full bg-primary text-white py-6 text-xl font-display font-black uppercase tracking-widest hover:bg-primary-dark transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                >
+                  {isLoading ? "VERIFYING..." : "VERIFY & LOGIN"} <ShieldCheck size={24} />
                 </button>
                 <button 
                   onClick={() => setStep(1)}
@@ -94,4 +167,10 @@ export default function LoginPage() {
       <Footer />
     </main>
   );
+}
+
+declare global {
+  interface Window {
+    recaptchaVerifier: any;
+  }
 }

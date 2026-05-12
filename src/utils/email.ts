@@ -1,25 +1,21 @@
-import sgMail from '@sendgrid/mail';
+import { Resend } from 'resend';
 
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
-  if (!process.env.SENDGRID_API_KEY) {
+  if (!process.env.RESEND_API_KEY) {
     console.log(`[Email Mock] To: ${to}, Subject: ${subject}`);
     return;
   }
 
-  const msg = {
-    to,
-    from: process.env.EMAIL_FROM || 'noreply@worko.com',
-    subject,
-    html,
-  };
-
   try {
-    await sgMail.send(msg);
-    console.log(`Email sent to ${to}`);
+    const data = await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+      to: [to],
+      subject: subject,
+      html: html,
+    });
+    console.log(`Email sent to ${to}:`, data);
   } catch (error) {
     console.error('Error sending email:', error);
   }
