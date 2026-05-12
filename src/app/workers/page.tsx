@@ -1,55 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Search, MapPin, Star, ShieldCheck, ArrowRight, Filter, X } from "lucide-react";
 import Link from "next/link";
-
-const workers = [
-  {
-    id: "1",
-    name: "Rajesh Kumar",
-    trade: "ELECTRICIAN",
-    rating: 4.9,
-    reviews: 124,
-    city: "Mumbai",
-    locality: "Andheri",
-    wage: 800,
-    isVerified: true,
-  },
-  {
-    id: "2",
-    name: "Amit Singh",
-    trade: "PLUMBER",
-    rating: 4.8,
-    reviews: 89,
-    city: "Delhi",
-    locality: "Saket",
-    wage: 700,
-    isVerified: true,
-  },
-  {
-    id: "3",
-    name: "Vikram Carpenter",
-    trade: "CARPENTER",
-    rating: 4.7,
-    reviews: 45,
-    city: "Bangalore",
-    locality: "HSR Layout",
-    wage: 1000,
-    isVerified: false,
-  },
-];
-
 import SuccessModal from "@/components/SuccessModal";
 
 export default function WorkersPage() {
+  const [workers, setWorkers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTrade, setSelectedTrade] = useState("ALL");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`/api/workers?trade=${selectedTrade}`);
+        const data = await res.json();
+        if (data.workers) {
+          setWorkers(data.workers);
+        }
+      } catch (err) {
+        console.error("Failed to fetch workers", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchWorkers();
+  }, [selectedTrade]);
 
   const handleRequestQuote = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,11 +41,15 @@ export default function WorkersPage() {
   };
 
   const filteredWorkers = workers.filter(worker => {
-    const matchesSearch = worker.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          worker.locality.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const name = worker.user?.name || "";
+    const city = worker.user?.city || "";
+    const locality = worker.user?.locality || "";
+    
+    const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          locality.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           worker.trade.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTrade = selectedTrade === "ALL" || worker.trade === selectedTrade;
-    return matchesSearch && matchesTrade;
+    return matchesSearch;
   });
 
   return (
@@ -251,7 +239,16 @@ export default function WorkersPage() {
 
             {/* Workers Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {filteredWorkers.map((worker, i) => (
+              {isLoading ? (
+                <div className="col-span-1 md:col-span-2 flex justify-center py-20">
+                  <div className="w-16 h-16 border-4 border-secondary border-t-primary rounded-full animate-spin"></div>
+                </div>
+              ) : filteredWorkers.length === 0 ? (
+                 <div className="col-span-1 md:col-span-2 text-center py-20 bg-surface/50 border-2 border-secondary/10 rounded-3xl">
+                    <h3 className="text-2xl font-display font-black text-heading">NO PROS FOUND</h3>
+                    <p className="text-muted mt-2">Try adjusting your filters or search terms.</p>
+                  </div>
+              ) : filteredWorkers.map((worker, i) => (
                 <motion.div
                   key={worker.id}
                   initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -263,11 +260,9 @@ export default function WorkersPage() {
                   <div className="flex justify-between items-start relative z-10">
                     <motion.div 
                       whileHover={{ scale: 1.1, rotate: -2 }}
-                      className="w-20 h-20 md:w-28 md:h-28 bg-surface-dark border-4 border-white overflow-hidden relative shadow-xl rounded-2xl transition-transform"
+                      className="w-20 h-20 md:w-28 md:h-28 bg-surface-dark border-4 border-white overflow-hidden relative shadow-xl rounded-2xl transition-transform flex items-center justify-center text-4xl font-display font-black text-heading"
                     >
-                      <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center text-4xl font-display font-black text-heading">
-                        {worker.name[0]}
-                      </div>
+                      {worker.user?.name?.[0] || "?"}
                     </motion.div>
                     <div className="flex flex-col items-end gap-2">
                       {worker.isVerified && (
@@ -276,7 +271,7 @@ export default function WorkersPage() {
                         </div>
                       )}
                       <div className="flex items-center gap-1 text-accent font-black text-sm">
-                        <Star size={16} fill="currentColor" /> {worker.rating}
+                        <Star size={16} fill="currentColor" /> {worker.rating || "New"}
                       </div>
                     </div>
                   </div>
@@ -287,20 +282,20 @@ export default function WorkersPage() {
                         <div className="bg-secondary/5 inline-block px-3 py-1 text-[9px] font-black uppercase tracking-widest text-heading rounded-full">
                           {worker.trade}
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight leading-none group-hover:text-primary transition-colors">
-                          {worker.name}
+                        <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight leading-none group-hover:text-primary transition-colors line-clamp-1">
+                          {worker.user?.name || "Anonymous"}
                         </h2>
                       </div>
                     </div>
                     <p className="text-[10px] font-bold text-muted uppercase tracking-widest flex items-center gap-2">
-                      <MapPin size={14} className="text-primary" /> {worker.locality}, {worker.city}
+                      <MapPin size={14} className="text-primary" /> {worker.user?.locality || "Unknown"}, {worker.user?.city || "Unknown"}
                     </p>
                   </div>
 
                   <div className="pt-8 border-t border-secondary/5 flex justify-between items-center relative z-10">
                     <div>
                       <div className="text-[9px] font-black text-muted uppercase tracking-widest mb-1">Min. Daily Wage</div>
-                      <div className="text-3xl font-display font-black text-heading">₹{worker.wage}<span className="text-xs font-medium text-muted">/day</span></div>
+                      <div className="text-3xl font-display font-black text-heading">₹{worker.dailyWage}<span className="text-xs font-medium text-muted">/day</span></div>
                     </div>
                     <div className="flex gap-3">
                       <button 
@@ -324,12 +319,14 @@ export default function WorkersPage() {
             </div>
 
             {/* Load More */}
-            <div className="flex justify-center pt-12">
-              <button className="group relative bg-secondary text-white px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:shadow-glow rounded-2xl">
-                <span className="relative z-10">LOAD MORE EXPERTS</span>
-                <div className="absolute inset-0 bg-primary -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              </button>
-            </div>
+            {!isLoading && filteredWorkers.length > 0 && (
+              <div className="flex justify-center pt-12">
+                <button className="group relative bg-secondary text-white px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:shadow-glow rounded-2xl">
+                  <span className="relative z-10">LOAD MORE EXPERTS</span>
+                  <div className="absolute inset-0 bg-primary -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -339,7 +336,6 @@ export default function WorkersPage() {
   );
 }
 
-
 function FilterGroup({ title, children }: any) {
   return (
     <div className="space-y-4">
@@ -348,4 +344,3 @@ function FilterGroup({ title, children }: any) {
     </div>
   );
 }
-
