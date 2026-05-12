@@ -252,7 +252,7 @@ export default function Home() {
                 <h2 className="text-4xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85]">
                   YOUR <span className="text-primary">SAFETY</span> <br /> IS OUR MISSION
                 </h2>
-                <p className="text-xl md:text-2xl text-white/70 font-medium">We've built KaamMitr with trust at its core, ensuring a secure environment for every transaction.</p>
+                <p className="text-xl md:text-2xl text-white/70 font-medium">We've built Worko with trust at its core, ensuring a secure environment for every transaction.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -288,7 +288,7 @@ export default function Home() {
                 <div className="w-24 h-24 bg-primary flex items-center justify-center rounded-3xl mb-8">
                   <Shield size={48} className="text-white" />
                 </div>
-                <h3 className="text-3xl font-display font-black uppercase text-white">KAAMMITR PROMISE</h3>
+                <h3 className="text-3xl font-display font-black uppercase text-white">WORKO PROMISE</h3>
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4 text-white/80 font-medium">
                     <CheckCircle2 className="text-primary shrink-0" size={24} />
@@ -367,7 +367,7 @@ export default function Home() {
             <TestimonialCard 
               name="Vikram Mehta" 
               role="Homeowner, Mumbai" 
-              text="KaamMitr saved my renovation project. I found a verified plumber in 10 minutes when local options failed me." 
+              text="Worko saved my renovation project. I found a verified plumber in 10 minutes when local options failed me." 
               avatar="https://i.pravatar.cc/100?u=v"
             />
             <TestimonialCard 
@@ -395,7 +395,7 @@ export default function Home() {
           </div>
 
           <div className="space-y-4">
-            <FAQItem question="Is KaamMitr free to use?" answer="KaamMitr is free for hirers to browse and post jobs. For workers, we have a freemium model where basic listings are free, and premium verified status requires a small annual fee." />
+            <FAQItem question="Is Worko free to use?" answer="Worko is free for hirers to browse and post jobs. For workers, we have a freemium model where basic listings are free, and premium verified status requires a small annual fee." />
             <FAQItem question="How do you verify professionals?" answer="We conduct identity verification using Aadhar/PAN, check physical documents for ITI certifications, and perform randomized skill assessments for 'Pro' verified experts." />
             <FAQItem question="How do payments work?" answer="We use a secure escrow system. Hirers deposit the amount once a job is accepted, and the funds are released to the worker immediately upon project completion and approval." />
             <FAQItem question="Can I hire for long-term projects?" answer="Yes! While many use us for urgent repairs, you can post requirements for weekly or full-time roles for construction or maintenance projects." />

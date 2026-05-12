@@ -39,7 +39,7 @@ export default function OnboardingPage() {
                   <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85] text-heading">
                     CHOOSE YOUR <span className="text-primary">PATH</span>
                   </h1>
-                  <p className="text-xl md:text-2xl text-muted font-medium">How do you want to use the KaamMitr platform?</p>
+                  <p className="text-xl md:text-2xl text-muted font-medium">How do you want to use the Worko platform?</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">

@@ -1,14 +1,15 @@
 "use client";
 
-import { Hammer, Globe, MessageCircle, Share2, Mail, ArrowUpRight } from "lucide-react";
+import { Globe, MessageCircle, Share2, Mail, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <footer className="bg-secondary text-white pt-32 pb-12 overflow-hidden relative">
       {/* Large Decorative Text */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-display font-black text-white/5 whitespace-nowrap select-none pointer-events-none">
-        KAAMMITR KAAMMITR
+        WORKO WORKO
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -16,11 +17,11 @@ export default function Footer() {
           
           <div className="space-y-10 lg:col-span-2">
             <Link href="/" className="flex items-center gap-4 group">
-              <div className="bg-primary p-3 group-hover:rotate-12 transition-transform duration-500">
-                <Hammer className="text-white" size={32} />
+              <div className="bg-white p-3 group-hover:rotate-12 transition-transform duration-500 rounded-lg flex items-center justify-center">
+                <Image src="/logoimage.png" alt="Worko Logo" width={40} height={40} className="object-contain" />
               </div>
               <span className="text-4xl font-display font-extrabold tracking-tighter uppercase">
-                Kaam<span className="text-primary">Mitr</span>
+                Work<span className="text-primary">o</span>
               </span>
             </Link>
             <p className="text-xl text-muted max-w-sm leading-relaxed font-medium">
@@ -58,7 +59,7 @@ export default function Footer() {
 
         <div className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-sm font-bold text-muted uppercase tracking-widest">
-            © 2026 KAAMMITR. MADE WITH PRIDE IN BHARAT.
+            © 2026 WORKO. MADE WITH PRIDE IN BHARAT.
           </p>
           <div className="flex gap-12 text-sm font-bold text-muted uppercase tracking-widest">
             <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>

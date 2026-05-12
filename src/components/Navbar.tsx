@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, Hammer, ArrowRight, User, Briefcase } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, ArrowRight, User, Briefcase } from "lucide-react";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -39,12 +40,12 @@ export default function Navbar() {
               <Link href="/" className="flex items-center gap-2 md:gap-3 group relative z-[110]">
                 <motion.div 
                   whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                  className="bg-primary p-2 md:p-2.5 rounded-lg transition-transform duration-500 shadow-glow"
+                  className="transition-transform duration-500 rounded-lg overflow-hidden flex items-center justify-center bg-white p-1"
                 >
-                  <Hammer className="text-white" size={24} />
+                  <Image src="/logoimage.png" alt="Worko Logo" width={32} height={32} className="object-contain" />
                 </motion.div>
                 <span className="text-xl md:text-2xl font-display font-extrabold tracking-tighter uppercase text-heading">
-                  Kaam<span className="text-primary">Mitr</span>
+                  Work<span className="text-primary">o</span>
                 </span>
               </Link>
 
@@ -133,7 +134,7 @@ export default function Navbar() {
                 </div>
                 
                 <div className="mt-auto pb-10">
-                  <p className="text-[10px] font-black text-muted uppercase tracking-widest">© 2026 KAAMMITR</p>
+                  <p className="text-[10px] font-black text-muted uppercase tracking-widest">© 2026 WORKO</p>
                 </div>
               </motion.div>
             </>

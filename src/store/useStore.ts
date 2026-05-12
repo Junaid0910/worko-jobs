@@ -24,7 +24,7 @@ export const useStore = create<AppState>()(
       setIsLoading: (isLoading) => set({ isLoading }),
     }),
     {
-      name: 'kaammitr-storage',
+      name: 'worko-storage',
     }
   )
 );

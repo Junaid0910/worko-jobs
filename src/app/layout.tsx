@@ -3,7 +3,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "KaamMitr | Bharat ke Kaarigar, Ab Digital",
+  title: "Worko | Bharat ke Kaarigar, Ab Digital",
   description: "Hyperlocal skilled trades job board for India. Find electricians, plumbers, carpenters and more.",
 };
 
