@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const jobId = params.id;
+    const { id: jobId } = await params;
     
     if (!jobId) {
       return NextResponse.json({ error: "Job ID is required" }, { status: 400 });

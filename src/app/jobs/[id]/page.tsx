@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MapPin, Clock, ArrowRight, Shield, AlertCircle, Calendar, Briefcase, IndianRupee, CheckCircle2, Loader2 } from "lucide-react";
@@ -8,7 +8,8 @@ import SuccessModal from "@/components/SuccessModal";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 
-export default function JobDetailsPage({ params }: { params: { id: string } }) {
+export default function JobDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data: session } = useSession();
   const [job, setJob] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +21,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
     const fetchJob = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`/api/jobs/${params.id}`);
+        const res = await fetch(`/api/jobs/${id}`);
         if (!res.ok) throw new Error("Job not found");
         const data = await res.json();
         setJob(data);
@@ -31,7 +32,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
       }
     };
     fetchJob();
-  }, [params.id]);
+  }, [id]);
 
   const handleApply = async () => {
     if (!session) {
