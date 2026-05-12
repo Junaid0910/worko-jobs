@@ -168,7 +168,7 @@ export default function Home() {
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "0px 0px -50px 0px" }}
                 transition={{ 
                   delay: i * 0.1, 
                   type: "spring", 
@@ -199,6 +199,7 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "0px 0px -50px 0px" }}
               className="bg-primary/10 text-primary px-6 py-2 rounded-full inline-block text-[10px] font-black uppercase tracking-widest"
             >
               The Roadmap
@@ -409,17 +410,17 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "0px 0px -100px 0px" }}
             className="glass p-12 md:p-32 lg:p-40 space-y-12 md:space-y-20 text-center relative overflow-hidden rounded-3xl md:rounded-5xl shadow-premium border-white/60 group"
           >
             <motion.div 
               animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-                rotate: [0, 90, 180, 270, 360]
+                scale: [1, 1.1, 1],
+                opacity: [0.1, 0.2, 0.1]
               }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -top-1/2 -left-1/2 w-full h-full bg-primary/20 rounded-full blur-[120px]" 
+              style={{ willChange: "transform, opacity" }}
             />
             <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/10 rounded-full blur-[100px]" />
             
@@ -457,7 +458,7 @@ function StepItem({ number, title, desc, icon: Icon }: any) {
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
       className="flex gap-8 group"
     >
       <div className="space-y-4 shrink-0">
@@ -479,7 +480,7 @@ function TrustFeature({ icon: Icon, title, desc }: any) {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
       className="space-y-4 p-8 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors"
     >
       <div className="w-14 h-14 bg-primary/20 text-primary flex items-center justify-center rounded-2xl shadow-glow">
@@ -496,7 +497,7 @@ function TestimonialCard({ name, role, text, avatar }: any) {
     <motion.div 
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, margin: "0px 0px -50px 0px" }}
       whileHover={{ y: -10 }}
       className="glass p-10 md:p-14 space-y-8 rounded-4xl shadow-premium border-white/60"
     >
