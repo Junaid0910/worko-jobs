@@ -44,6 +44,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: var(--surface-dark);
+    --surface: var(--surface-dark);
     --foreground: #f8fafc;
     --heading: #f8fafc;
     --glass-bg: rgba(15, 28, 63, 0.6);

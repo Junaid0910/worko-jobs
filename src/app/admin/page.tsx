@@ -26,7 +26,7 @@ export default function AdminPage() {
               <p className="text-xl text-muted font-bold tracking-widest uppercase">System Overview & Management</p>
             </div>
             
-            <div className="flex bg-white border-4 border-secondary p-2">
+            <div className="flex bg-surface border-4 border-secondary p-2">
               {["STATS", "VERIFICATION", "USERS", "JOBS"].map((tab) => (
                 <button
                   key={tab}
@@ -49,7 +49,7 @@ export default function AdminPage() {
               { label: "Verification Req", value: "42", icon: Shield, color: "text-primary" },
               { label: "Revenue (MTD)", value: "₹4,20,000", icon: TrendingUp, color: "text-green-500" },
             ].map((stat, i) => (
-              <div key={i} className="bg-white p-8 border-2 border-muted/10 space-y-4 shadow-xl">
+              <div key={i} className="bg-surface p-8 border-2 border-muted/10 space-y-4 shadow-xl">
                 <stat.icon className={stat.color} size={32} />
                 <div>
                   <div className="text-4xl font-display font-black">{stat.value}</div>
@@ -60,7 +60,7 @@ export default function AdminPage() {
           </div>
 
           {/* Main Content Area */}
-          <div className="bg-white border-4 border-secondary shadow-[24px_24px_0px_0px_#0F1C3F] overflow-hidden">
+          <div className="bg-surface border-4 border-secondary shadow-[24px_24px_0px_0px_#0F1C3F] overflow-hidden">
             {activeTab === "VERIFICATION" && (
               <div className="divide-y-4 divide-secondary">
                 <div className="p-8 bg-secondary text-white flex justify-between items-center">

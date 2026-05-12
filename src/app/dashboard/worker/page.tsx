@@ -32,7 +32,7 @@ export default function WorkerDashboard() {
           
           {/* Sidebar */}
           <aside className="space-y-8">
-            <div className="bg-white p-8 border-2 border-secondary shadow-[8px_8px_0px_0px_#0F1C3F]">
+            <div className="bg-surface p-8 border-2 border-secondary shadow-[8px_8px_0px_0px_#0F1C3F]">
               <div className="flex flex-col items-center text-center space-y-4">
                 <div className="w-24 h-24 bg-surface-dark border-4 border-primary overflow-hidden relative">
                   <User size={64} className="text-white absolute bottom-0 left-1/2 -translate-x-1/2" />
@@ -53,7 +53,7 @@ export default function WorkerDashboard() {
               </div>
             </div>
 
-            <nav className="bg-white border-2 border-muted/10 divide-y divide-muted/10">
+            <nav className="bg-surface border-2 border-muted/10 divide-y divide-muted/10">
               <Link href="/dashboard/worker" className="flex items-center gap-4 px-6 py-4 font-bold text-sm bg-primary text-white">
                 <Briefcase size={18} /> DASHBOARD
               </Link>
@@ -88,7 +88,7 @@ export default function WorkerDashboard() {
               </div>
               
               {/* Availability Toggle */}
-              <div className="bg-white p-4 border-2 border-secondary flex items-center gap-6 shadow-[8px_8px_0px_0px_#F5C518]">
+              <div className="bg-surface p-4 border-2 border-secondary flex items-center gap-6 shadow-[8px_8px_0px_0px_#F5C518]">
                 <div className="space-y-0.5">
                   <div className="text-[10px] font-black uppercase tracking-widest">Availability</div>
                   <div className={`text-sm font-black ${isAvailable ? "text-green-500" : "text-muted"}`}>
@@ -110,7 +110,7 @@ export default function WorkerDashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, i) => (
-                <div key={i} className="bg-white p-8 border-2 border-muted/10 space-y-4 hover:border-secondary transition-colors">
+                <div key={i} className="bg-surface p-8 border-2 border-muted/10 space-y-4 hover:border-secondary transition-colors">
                   <div className={`w-10 h-10 ${stat.color} bg-current/10 flex items-center justify-center`}>
                     <stat.icon size={20} />
                   </div>
@@ -129,7 +129,7 @@ export default function WorkerDashboard() {
                 <Link href="/dashboard/worker/applications" className="text-xs font-black uppercase tracking-widest text-primary hover:underline">View All</Link>
               </div>
               
-              <div className="bg-white border-2 border-secondary overflow-hidden divide-y divide-muted/10">
+              <div className="bg-surface border-2 border-secondary overflow-hidden divide-y divide-muted/10">
                 {applications.map((app) => (
                   <div key={app.id} className="p-6 flex flex-col md:flex-row justify-between items-center gap-6 group hover:bg-surface transition-colors">
                     <div className="flex items-center gap-6">
