@@ -26,11 +26,11 @@ export default function SuccessModal({ isOpen, onClose, title, message }: Succes
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative bg-white glass p-8 md:p-12 rounded-4xl shadow-2xl max-w-lg w-full text-center space-y-8"
+            className="relative bg-surface glass p-8 md:p-12 rounded-4xl shadow-2xl max-w-lg w-full text-center space-y-8"
           >
             <button 
               onClick={onClose}
-              className="absolute top-6 right-6 text-muted hover:text-secondary transition-colors"
+              className="absolute top-6 right-6 text-muted hover:text-heading transition-colors"
             >
               <X size={24} />
             </button>
@@ -42,7 +42,7 @@ export default function SuccessModal({ isOpen, onClose, title, message }: Succes
             </div>
             
             <div className="space-y-4">
-              <h3 className="text-3xl md:text-4xl font-display font-black uppercase text-secondary tracking-tight">
+              <h3 className="text-3xl md:text-4xl font-display font-black uppercase text-heading tracking-tight">
                 {title}
               </h3>
               <p className="text-lg text-muted font-medium leading-relaxed">

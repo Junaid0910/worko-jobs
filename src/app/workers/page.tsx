@@ -95,7 +95,7 @@ export default function WorkersPage() {
                   className="w-full max-w-sm bg-surface h-full p-6 sm:p-8 overflow-y-auto"
                 >
                   <div className="flex justify-between items-center mb-8">
-                    <h3 className="text-xl font-display font-black uppercase tracking-tight text-secondary">Refine Search</h3>
+                    <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading">Refine Search</h3>
                     <button onClick={() => setIsFilterOpen(false)} className="p-2 bg-secondary/5 rounded-full text-secondary hover:bg-secondary/10 transition-colors">
                       <X size={24} />
                     </button>
@@ -138,7 +138,7 @@ export default function WorkersPage() {
                     <FilterGroup title="Availability">
                       <label className="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" defaultChecked />
-                        <span className="text-sm font-bold text-secondary">Available Now</span>
+                        <span className="text-sm font-bold text-heading">Available Now</span>
                       </label>
                     </FilterGroup>
                   </div>
@@ -157,7 +157,7 @@ export default function WorkersPage() {
           {/* Filter Sidebar - Desktop */}
           <aside className="hidden lg:block w-80 space-y-10">
             <div className="glass p-8 rounded-3xl border-white/60 shadow-premium sticky top-32">
-              <h3 className="text-xl font-display font-black uppercase tracking-tight text-secondary mb-8">Refine Search</h3>
+              <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading mb-8">Refine Search</h3>
               
               <div className="space-y-8">
                 <FilterGroup title="Trade Category">
@@ -196,7 +196,7 @@ export default function WorkersPage() {
                 <FilterGroup title="Availability">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" defaultChecked />
-                    <span className="text-sm font-bold text-secondary">Available Now</span>
+                    <span className="text-sm font-bold text-heading">Available Now</span>
                   </label>
                 </FilterGroup>
               </div>
@@ -225,7 +225,7 @@ export default function WorkersPage() {
                   </h1>
                 </div>
                 <div className="text-sm font-bold text-muted uppercase tracking-widest">
-                  Showing <span className="text-secondary">{filteredWorkers.length}</span> Pros
+                  Showing <span className="text-heading">{filteredWorkers.length}</span> Pros
                 </div>
               </div>
 
@@ -236,13 +236,13 @@ export default function WorkersPage() {
                     placeholder="Search by name, trade or locality..." 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/80 glass px-6 py-4 md:px-8 md:py-6 text-lg font-bold outline-none focus:ring-8 ring-primary/5 border-2 border-secondary/5 focus:border-primary transition-all shadow-premium rounded-2xl"
+                    className="w-full bg-surface/80 glass px-6 py-4 md:px-8 md:py-6 text-lg font-bold outline-none focus:ring-8 ring-primary/5 border-2 border-secondary/5 focus:border-primary transition-all shadow-premium rounded-2xl"
                   />
                   <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={24} />
                 </div>
                 <button 
                   onClick={() => setIsFilterOpen(!isFilterOpen)}
-                  className="lg:hidden glass p-4 rounded-2xl border-secondary/10 flex items-center justify-center text-secondary"
+                   className="lg:hidden glass p-4 rounded-2xl border-secondary/10 flex items-center justify-center text-heading"
                 >
                   <Filter size={24} />
                 </button>
@@ -258,14 +258,14 @@ export default function WorkersPage() {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.8 }}
-                  className="group relative bg-white/80 backdrop-blur-md border border-white/50 p-8 md:p-10 space-y-8 shadow-premium transition-all hover:border-primary/40 rounded-3xl overflow-hidden shine-effect"
+                   className="group relative bg-surface/80 backdrop-blur-md border border-white/50 p-8 md:p-10 space-y-8 shadow-premium transition-all hover:border-primary/40 rounded-3xl overflow-hidden shine-effect"
                 >
                   <div className="flex justify-between items-start relative z-10">
                     <motion.div 
                       whileHover={{ scale: 1.1, rotate: -2 }}
                       className="w-20 h-20 md:w-28 md:h-28 bg-surface-dark border-4 border-white overflow-hidden relative shadow-xl rounded-2xl transition-transform"
                     >
-                      <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center text-4xl font-display font-black text-secondary">
+                      <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center text-4xl font-display font-black text-heading">
                         {worker.name[0]}
                       </div>
                     </motion.div>
@@ -284,7 +284,7 @@ export default function WorkersPage() {
                   <div className="space-y-4 relative z-10">
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
-                        <div className="bg-secondary/5 inline-block px-3 py-1 text-[9px] font-black uppercase tracking-widest text-secondary rounded-full">
+                        <div className="bg-secondary/5 inline-block px-3 py-1 text-[9px] font-black uppercase tracking-widest text-heading rounded-full">
                           {worker.trade}
                         </div>
                         <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight leading-none group-hover:text-primary transition-colors">
@@ -300,12 +300,12 @@ export default function WorkersPage() {
                   <div className="pt-8 border-t border-secondary/5 flex justify-between items-center relative z-10">
                     <div>
                       <div className="text-[9px] font-black text-muted uppercase tracking-widest mb-1">Min. Daily Wage</div>
-                      <div className="text-3xl font-display font-black text-secondary">₹{worker.wage}<span className="text-xs font-medium text-muted">/day</span></div>
+                      <div className="text-3xl font-display font-black text-heading">₹{worker.wage}<span className="text-xs font-medium text-muted">/day</span></div>
                     </div>
                     <div className="flex gap-3">
                       <button 
                         onClick={handleRequestQuote}
-                        className="hidden sm:flex items-center justify-center bg-white border-2 border-secondary text-secondary px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary hover:text-white transition-all"
+                        className="hidden sm:flex items-center justify-center bg-surface border-2 border-secondary text-heading px-6 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary hover:text-white transition-all"
                       >
                         Request Quote
                       </button>

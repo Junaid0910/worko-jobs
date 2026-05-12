@@ -32,7 +32,7 @@ export default function Navbar() {
       }`}>
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           <div className={`glass rounded-2xl md:rounded-3xl transition-all duration-500 overflow-hidden ${
-            isScrolled ? "bg-white/90 shadow-premium border-white/40" : "bg-white/40 backdrop-blur-md border-white/20"
+            isScrolled ? "bg-surface/90 shadow-premium border-white/40" : "bg-surface/40 backdrop-blur-md border-white/20"
           }`}>
             <div className="flex justify-between items-center px-6 md:px-10 h-16 md:h-20">
               {/* Logo */}
@@ -43,7 +43,7 @@ export default function Navbar() {
                 >
                   <Hammer className="text-white" size={24} />
                 </motion.div>
-                <span className="text-xl md:text-2xl font-display font-extrabold tracking-tighter uppercase text-secondary">
+                <span className="text-xl md:text-2xl font-display font-extrabold tracking-tighter uppercase text-heading">
                   Kaam<span className="text-primary">Mitr</span>
                 </span>
               </Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
                 <NavLink href="/workers" label="Find Pros" />
                 <NavLink href="/jobs" label="Browse Jobs" />
                 <div className="flex items-center gap-6 ml-6 pl-6 border-l border-muted/20">
-                  <Link href="/login" className="text-xs font-black uppercase tracking-widest text-secondary hover:text-primary transition-colors">
+                  <Link href="/login" className="text-xs font-black uppercase tracking-widest text-heading hover:text-primary transition-colors">
                     Login
                   </Link>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -72,7 +72,7 @@ export default function Navbar() {
 
               {/* Mobile Menu Toggle */}
               <button 
-                className="lg:hidden p-2 text-secondary relative z-[110] hover:scale-110 active:scale-95 transition-all"
+                className="lg:hidden p-2 text-heading relative z-[110] hover:scale-110 active:scale-95 transition-all"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 aria-label="Toggle Menu"
               >
@@ -118,7 +118,7 @@ export default function Navbar() {
                     <Link 
                       href="/login" 
                       onClick={() => setIsMobileMenuOpen(false)} 
-                      className="flex justify-between items-center text-2xl font-display font-black uppercase text-secondary group"
+                      className="flex justify-between items-center text-2xl font-display font-black uppercase text-heading group"
                     >
                       Login <ArrowRight className="group-hover:translate-x-2 transition-transform" />
                     </Link>
@@ -146,7 +146,7 @@ export default function Navbar() {
 
 function NavLink({ href, label }: { href: string; label: string }) {
   return (
-    <Link href={href} className="relative text-xs font-black uppercase tracking-widest text-secondary hover:text-primary transition-colors group">
+    <Link href={href} className="relative text-xs font-black uppercase tracking-widest text-heading hover:text-primary transition-colors group">
       {label}
       <motion.span 
         className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary"
@@ -162,7 +162,7 @@ function MobileNavLink({ href, label, icon: Icon, onClick }: { href: string; lab
     <motion.div
       whileTap={{ scale: 0.95 }}
     >
-      <Link href={href} onClick={onClick} className="flex items-center gap-4 text-3xl font-display font-black uppercase text-secondary hover:text-primary transition-all group">
+      <Link href={href} onClick={onClick} className="flex items-center gap-4 text-3xl font-display font-black uppercase text-heading hover:text-primary transition-all group">
         <div className="w-12 h-12 bg-secondary/5 flex items-center justify-center rounded-xl group-hover:bg-primary/10 group-hover:text-primary transition-colors">
           <Icon size={24} />
         </div>

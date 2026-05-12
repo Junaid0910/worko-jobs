@@ -121,7 +121,7 @@ export default function Home() {
                     <Star size={16} fill="currentColor" />
                     <Star size={16} fill="currentColor" />
                   </div>
-                  <p className="text-xs font-black text-secondary uppercase tracking-widest">10,000+ Happy Users</p>
+                  <p className="text-xs font-black text-heading uppercase tracking-widest">10,000+ Happy Users</p>
                 </div>
               </motion.div>
             </div>
@@ -176,14 +176,14 @@ export default function Home() {
                   damping: 15 
                 }}
                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
-                className="bg-white/80 backdrop-blur-sm p-8 md:p-12 shadow-premium text-center lg:text-left space-y-6 rounded-2xl md:rounded-3xl border border-white/50 group overflow-hidden relative"
+                className="bg-surface/80 backdrop-blur-sm p-8 md:p-12 shadow-premium text-center lg:text-left space-y-6 rounded-2xl md:rounded-3xl border-white/50 group overflow-hidden relative"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-20 transition-opacity">
                   <stat.icon size={80} />
                 </div>
                 <stat.icon className="text-primary mx-auto lg:mx-0 group-hover:scale-125 transition-transform duration-500" size={32} />
                 <div className="space-y-2">
-                  <h4 className="text-4xl md:text-6xl font-display font-black tracking-tighter text-secondary group-hover:text-primary transition-colors">{stat.value}</h4>
+                  <h4 className="text-4xl md:text-6xl font-display font-black tracking-tighter text-heading group-hover:text-primary transition-colors">{stat.value}</h4>
                   <p className="text-[10px] md:text-xs font-black text-muted uppercase tracking-widest leading-none">{stat.label}</p>
                 </div>
               </motion.div>
@@ -203,7 +203,7 @@ export default function Home() {
             >
               The Roadmap
             </motion.div>
-            <h2 className="text-4xl md:text-8xl font-display font-black tracking-tighter uppercase leading-none text-secondary">
+            <h2 className="text-4xl md:text-8xl font-display font-black tracking-tighter uppercase leading-none text-heading">
               HOW IT <span className="text-primary">WORKS</span>
             </h2>
             <p className="text-xl md:text-2xl text-muted font-medium">Simple, secure, and lightning fast for everyone.</p>
@@ -212,7 +212,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-32">
             {/* For Hirers */}
             <div className="space-y-16">
-              <h3 className="text-3xl md:text-5xl font-display font-black uppercase text-secondary flex items-center gap-4">
+              <h3 className="text-3xl md:text-5xl font-display font-black uppercase text-heading flex items-center gap-4">
                 <span className="w-12 h-12 bg-secondary text-white flex items-center justify-center rounded-xl text-2xl">H</span>
                 FOR HIRERS
               </h3>
@@ -318,7 +318,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-16 md:space-y-32 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
             <div className="space-y-6">
-              <h2 className="text-fluid-h2 font-display font-black tracking-tighter uppercase leading-[0.85]">
+              <h2 className="text-fluid-h2 font-display font-black tracking-tighter uppercase leading-[0.85] text-white">
                 FIND YOUR<br />
                 <span className="text-primary">MAESTRO</span>
               </h2>
@@ -356,10 +356,10 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-32 md:py-60 bg-white/60 backdrop-blur-3xl overflow-hidden">
+      <section className="py-32 md:py-60 bg-surface/60 backdrop-blur-3xl overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 space-y-24">
           <div className="text-center space-y-6">
-            <h2 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase text-secondary">WORDS FROM OUR <span className="text-primary">USERS</span></h2>
+            <h2 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase text-heading">WORDS FROM OUR <span className="text-primary">USERS</span></h2>
             <p className="text-xl md:text-2xl text-muted font-medium max-w-2xl mx-auto">Real people, real experiences, and real success stories.</p>
           </div>
 
@@ -390,7 +390,7 @@ export default function Home() {
       <section className="py-32 md:py-60 px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="space-y-16">
           <div className="text-center space-y-4">
-            <h2 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase text-secondary">FREQUENTLY ASKED <span className="text-primary">QUESTIONS</span></h2>
+            <h2 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase text-heading">FREQUENTLY ASKED <span className="text-primary">QUESTIONS</span></h2>
             <p className="text-xl text-muted font-medium">Everything you need to know about the platform.</p>
           </div>
 
@@ -461,13 +461,13 @@ function StepItem({ number, title, desc, icon: Icon }: any) {
       className="flex gap-8 group"
     >
       <div className="space-y-4 shrink-0">
-        <div className="text-6xl md:text-7xl font-display font-black text-secondary/5 group-hover:text-primary/10 transition-colors">{number}</div>
+        <div className="text-6xl md:text-7xl font-display font-black text-heading/5 group-hover:text-primary/10 transition-colors">{number}</div>
         <div className="w-12 h-12 bg-surface-dark flex items-center justify-center rounded-xl group-hover:bg-primary transition-all group-hover:text-white">
           <Icon size={24} />
         </div>
       </div>
       <div className="space-y-3 pt-6 md:pt-10">
-        <h4 className="text-2xl md:text-3xl font-display font-black uppercase text-secondary group-hover:text-primary transition-colors">{title}</h4>
+        <h4 className="text-2xl md:text-3xl font-display font-black uppercase text-heading group-hover:text-primary transition-colors">{title}</h4>
         <p className="text-lg text-muted font-medium leading-relaxed max-w-sm">{desc}</p>
       </div>
     </motion.div>
@@ -505,7 +505,7 @@ function TestimonialCard({ name, role, text, avatar }: any) {
           <img src={avatar} alt={name} />
         </div>
         <div>
-          <h4 className="text-xl font-display font-black text-secondary uppercase tracking-tight">{name}</h4>
+          <h4 className="text-xl font-display font-black text-heading uppercase tracking-tight">{name}</h4>
           <p className="text-xs font-black text-muted uppercase tracking-widest">{role}</p>
         </div>
       </div>
@@ -529,7 +529,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full py-8 md:py-10 flex justify-between items-center text-left group"
       >
-        <span className="text-xl md:text-3xl font-display font-black uppercase text-secondary group-hover:text-primary transition-colors">{question}</span>
+        <span className="text-xl md:text-3xl font-display font-black uppercase text-heading group-hover:text-primary transition-colors">{question}</span>
         <ChevronDown className={`text-primary transition-transform duration-500 ${isOpen ? "rotate-180" : ""}`} size={32} />
       </button>
       <AnimatePresence>
@@ -562,7 +562,7 @@ function TradeCard({ icon: Icon, trade, delay, color, float }: any) {
       </div>
       <div>
         <div className="text-xs font-black text-muted uppercase tracking-widest mb-2">Verified Expert</div>
-        <h3 className="text-xl md:text-2xl font-display font-black text-secondary tracking-tight group-hover:text-primary transition-colors">{trade}</h3>
+        <h3 className="text-xl md:text-2xl font-display font-black text-heading tracking-tight group-hover:text-primary transition-colors">{trade}</h3>
       </div>
     </motion.div>
   );
