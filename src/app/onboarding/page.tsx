@@ -36,7 +36,7 @@ export default function OnboardingPage() {
                 className="space-y-16 text-center"
               >
                 <div className="space-y-6">
-                  <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85]">
+                  <h1 className="text-5xl md:text-8xl font-display font-black tracking-tighter uppercase leading-[0.85] text-heading">
                     CHOOSE YOUR <span className="text-primary">PATH</span>
                   </h1>
                   <p className="text-xl md:text-2xl text-muted font-medium">How do you want to use the KaamMitr platform?</p>
@@ -97,7 +97,7 @@ export default function OnboardingPage() {
                     {role === "WORKER" && (
                       <div className="space-y-3 md:col-span-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Your Primary Trade</label>
-                        <select className="w-full bg-white/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all appearance-none rounded-2xl">
+                        <select className="w-full bg-surface/50 border-2 border-secondary/5 px-8 py-5 text-lg font-bold outline-none focus:border-primary focus:ring-8 ring-primary/5 transition-all appearance-none rounded-2xl">
                           <option>Select your skill...</option>
                           <option>Electrician</option>
                           <option>Plumber</option>
@@ -130,7 +130,7 @@ function RoleCard({ title, desc, icon: Icon, onClick, highlight }: any) {
       className={`group relative p-12 text-left space-y-8 transition-all duration-500 overflow-hidden rounded-3xl md:rounded-4xl border-4 ${
         highlight 
           ? "bg-secondary text-white border-secondary shadow-premium" 
-          : "bg-white text-secondary border-secondary/5 hover:border-primary/50"
+          : "bg-surface text-heading border-secondary/5 hover:border-primary/50"
       }`}
     >
       <div className={`${highlight ? "bg-white/10" : "bg-secondary/5 group-hover:bg-primary/10 group-hover:text-primary"} w-20 h-20 flex items-center justify-center rounded-2xl transition-colors`}>
@@ -138,7 +138,7 @@ function RoleCard({ title, desc, icon: Icon, onClick, highlight }: any) {
       </div>
       <div className="space-y-4 relative z-10">
         <h3 className="text-3xl md:text-4xl font-display font-black tracking-tighter uppercase leading-none">{title}</h3>
-        <p className={`text-base md:text-lg font-medium leading-relaxed ${highlight ? "text-white/70" : "text-muted group-hover:text-secondary/80"}`}>{desc}</p>
+        <p className={`text-base md:text-lg font-medium leading-relaxed ${highlight ? "text-white/70" : "text-muted group-hover:text-heading/80"}`}>{desc}</p>
       </div>
       <div className={`absolute bottom-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-0 translate-x-10`}>
         <ArrowRight size={48} className={highlight ? "text-white" : "text-primary"} />

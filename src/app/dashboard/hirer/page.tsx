@@ -26,7 +26,7 @@ export default function HirerDashboard() {
               <div className="inline-block bg-accent/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-dark border border-accent/30">
                 Hirer Portal
               </div>
-              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none">
+              <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none text-heading">
                 MANAGE HIRING
               </h1>
               <p className="text-xl text-muted font-medium">Post new jobs and track applicants in one place</p>
@@ -41,18 +41,18 @@ export default function HirerDashboard() {
             
             {/* Active Jobs List */}
             <div className="lg:col-span-2 space-y-8">
-              <h3 className="text-3xl font-display font-black tracking-tighter uppercase border-l-8 border-secondary pl-6">ACTIVE LISTINGS</h3>
+              <h3 className="text-3xl font-display font-black tracking-tighter uppercase border-l-8 border-secondary pl-6 text-heading">ACTIVE LISTINGS</h3>
               
               <div className="space-y-6">
                 {activeJobs.map((job) => (
                   <motion.div 
                     key={job.id}
                     whileHover={{ scale: 1.01 }}
-                    className="bg-white border-2 border-secondary p-8 flex flex-col md:flex-row justify-between gap-8 shadow-[8px_8px_0px_0px_#F5C518] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
+                    className="bg-surface border-2 border-secondary p-8 flex flex-col md:flex-row justify-between gap-8 shadow-[8px_8px_0px_0px_#F5C518] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
                   >
                     <div className="space-y-4">
                       <div className="space-y-1">
-                        <h4 className="text-2xl font-display font-black tracking-tight">{job.title}</h4>
+                        <h4 className="text-2xl font-display font-black tracking-tight text-heading">{job.title}</h4>
                         <div className="flex items-center gap-4 text-xs font-bold text-muted uppercase tracking-widest">
                           <span className="flex items-center gap-1"><IndianRupee size={12} /> {job.budget}</span>
                           <span className="flex items-center gap-1 text-green-500"><div className="w-2 h-2 bg-green-500 rounded-full" /> {job.status}</span>
@@ -60,7 +60,7 @@ export default function HirerDashboard() {
                       </div>
                       <div className="flex gap-4">
                         <div className="bg-surface px-4 py-2 border border-muted/10">
-                          <span className="text-lg font-black text-secondary">{job.applicants}</span>
+                          <span className="text-lg font-black text-heading">{job.applicants}</span>
                           <span className="text-[10px] font-bold text-muted uppercase tracking-widest ml-2">Applicants</span>
                         </div>
                       </div>
@@ -81,29 +81,29 @@ export default function HirerDashboard() {
 
             {/* Sidebar Stats & Featured */}
             <aside className="space-y-10">
-              <div className="bg-white p-8 border-2 border-muted/10 space-y-8">
-                <h4 className="font-display font-black uppercase tracking-widest text-secondary">HIRING STATS</h4>
+              <div className="bg-surface p-8 border-2 border-muted/10 space-y-8">
+                <h4 className="font-display font-black uppercase tracking-widest text-heading">HIRING STATS</h4>
                 <div className="space-y-6">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-primary/10 text-primary flex items-center justify-center"><Briefcase size={20} /></div>
                       <span className="text-xs font-bold text-muted uppercase tracking-widest">Total Jobs</span>
                     </div>
-                    <span className="text-xl font-display font-black">14</span>
+                    <span className="text-xl font-display font-black text-heading">14</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-secondary/10 text-secondary flex items-center justify-center"><Users size={20} /></div>
+                      <div className="w-10 h-10 bg-secondary/10 text-heading flex items-center justify-center"><Users size={20} /></div>
                       <span className="text-xs font-bold text-muted uppercase tracking-widest">Pros Hired</span>
                     </div>
-                    <span className="text-xl font-display font-black">8</span>
+                    <span className="text-xl font-display font-black text-heading">8</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-accent/20 text-primary-dark flex items-center justify-center"><Star size={20} /></div>
                       <span className="text-xs font-bold text-muted uppercase tracking-widest">Hirer Rating</span>
                     </div>
-                    <span className="text-xl font-display font-black">4.9</span>
+                    <span className="text-xl font-display font-black text-heading">4.9</span>
                   </div>
                 </div>
               </div>

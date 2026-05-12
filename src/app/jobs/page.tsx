@@ -92,8 +92,8 @@ export default function JobsPage() {
                   className="w-full max-w-sm bg-surface h-full p-6 sm:p-8 overflow-y-auto"
                 >
                   <div className="flex justify-between items-center mb-8">
-                    <h3 className="text-xl font-display font-black uppercase tracking-tight text-secondary">Filters</h3>
-                    <button onClick={() => setIsFilterOpen(false)} className="p-2 bg-secondary/5 rounded-full text-secondary hover:bg-secondary/10 transition-colors">
+                    <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading">Filters</h3>
+                    <button onClick={() => setIsFilterOpen(false)} className="p-2 bg-secondary/5 rounded-full text-heading hover:bg-secondary/10 transition-colors">
                       <X size={24} />
                     </button>
                   </div>
@@ -104,7 +104,7 @@ export default function JobsPage() {
                         {["ONE_TIME", "WEEKLY", "FULLTIME"].map((type) => (
                           <label key={type} className="flex items-center gap-3 cursor-pointer group">
                             <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
-                            <span className="text-sm font-bold text-secondary group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
+                            <span className="text-sm font-bold text-heading group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
                           </label>
                         ))}
                       </div>
@@ -112,13 +112,13 @@ export default function JobsPage() {
 
                     <FilterGroup title="Min. Daily Budget">
                       <div className="flex items-center gap-4">
-                        <span className="text-sm font-black text-secondary">₹</span>
-                        <input type="number" placeholder="500" className="w-full bg-white/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
+                        <span className="text-sm font-black text-heading">₹</span>
+                        <input type="number" placeholder="500" className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
                       </div>
                     </FilterGroup>
 
                     <FilterGroup title="Trade Required">
-                      <select className="w-full bg-white/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
+                      <select className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
                         <option>All Trades</option>
                         <option>Electrician</option>
                         <option>Plumber</option>
@@ -129,7 +129,7 @@ export default function JobsPage() {
                     <FilterGroup title="Urgency">
                       <label className="flex items-center gap-3 cursor-pointer">
                         <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
-                        <span className="text-sm font-bold text-secondary">Urgent Jobs Only</span>
+                        <span className="text-sm font-bold text-heading">Urgent Jobs Only</span>
                       </label>
                     </FilterGroup>
                   </div>
@@ -149,7 +149,7 @@ export default function JobsPage() {
           <aside className="hidden lg:block w-80 space-y-10">
             <div className="glass p-8 rounded-3xl border-white/60 shadow-premium sticky top-32">
               <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-display font-black uppercase tracking-tight text-secondary">Filters</h3>
+                <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading">Filters</h3>
                 <button className="text-[10px] font-black text-primary uppercase tracking-widest">Reset</button>
               </div>
               
@@ -159,7 +159,7 @@ export default function JobsPage() {
                     {["ONE_TIME", "WEEKLY", "FULLTIME"].map((type) => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
-                        <span className="text-sm font-bold text-secondary group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
+                        <span className="text-sm font-bold text-heading group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
                       </label>
                     ))}
                   </div>
@@ -167,13 +167,13 @@ export default function JobsPage() {
 
                 <FilterGroup title="Min. Daily Budget">
                   <div className="flex items-center gap-4">
-                    <span className="text-sm font-black text-secondary">₹</span>
-                    <input type="number" placeholder="500" className="w-full bg-white/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
+                    <span className="text-sm font-black text-heading">₹</span>
+                    <input type="number" placeholder="500" className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
                   </div>
                 </FilterGroup>
 
                 <FilterGroup title="Trade Required">
-                  <select className="w-full bg-white/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
+                  <select className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
                     <option>All Trades</option>
                     <option>Electrician</option>
                     <option>Plumber</option>
@@ -184,7 +184,7 @@ export default function JobsPage() {
                 <FilterGroup title="Urgency">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
-                    <span className="text-sm font-bold text-secondary">Urgent Jobs Only</span>
+                    <span className="text-sm font-bold text-heading">Urgent Jobs Only</span>
                   </label>
                 </FilterGroup>
               </div>
@@ -201,7 +201,7 @@ export default function JobsPage() {
               </div>
               <h3 className="text-2xl font-display font-black uppercase text-white leading-tight">Need to hire fast?</h3>
               <p className="text-sm text-white/60 font-medium">Post your job requirement and get responses from verified pros in minutes.</p>
-              <Link href="/onboarding?role=HIRER" className="block text-center bg-white text-secondary py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
+              <Link href="/onboarding?role=HIRER" className="block text-center bg-surface text-heading py-4 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
                 POST A GIG NOW
               </Link>
             </div>
@@ -220,7 +220,7 @@ export default function JobsPage() {
                   >
                     <TrendingUp size={14} className="inline mr-2" /> Open Opportunities
                   </motion.div>
-                  <h1 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none">
+                  <h1 className="text-4xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none text-heading">
                     LATEST <span className="text-primary">GIGS</span>
                   </h1>
                 </div>
@@ -239,7 +239,7 @@ export default function JobsPage() {
                     placeholder="Search by job title, trade or city..." 
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/80 glass px-6 py-4 md:px-8 md:py-6 text-lg font-bold outline-none focus:ring-8 ring-primary/5 border-2 border-secondary/5 focus:border-primary transition-all shadow-premium rounded-2xl"
+                    className="w-full bg-surface/80 glass px-6 py-4 md:px-8 md:py-6 text-lg font-bold outline-none focus:ring-8 ring-primary/5 border-2 border-secondary/5 focus:border-primary transition-all shadow-premium rounded-2xl"
                   />
                   <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={24} />
                 </div>
@@ -255,7 +255,7 @@ export default function JobsPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.8 }}
-                  className="group relative bg-white/80 backdrop-blur-md border border-white/50 p-8 md:p-12 flex flex-col md:flex-row gap-8 justify-between shadow-premium transition-all hover:border-primary/40 rounded-3xl overflow-hidden shine-effect"
+                  className="group relative bg-surface/80 backdrop-blur-md border border-white/50 p-8 md:p-12 flex flex-col md:flex-row gap-8 justify-between shadow-premium transition-all hover:border-primary/40 rounded-3xl overflow-hidden shine-effect"
                 >
                   <div className="flex-1 space-y-8 relative z-10">
                     <div className="flex justify-between items-start">
@@ -292,7 +292,7 @@ export default function JobsPage() {
                   <div className="md:w-72 flex flex-col justify-center gap-8 md:border-l border-secondary/5 md:pl-12 relative z-10">
                     <div className="space-y-1">
                       <div className="text-[9px] font-black text-muted uppercase tracking-widest">Daily Budget</div>
-                      <div className="text-4xl font-display font-black text-secondary">₹{job.budget}</div>
+                      <div className="text-4xl font-display font-black text-heading">₹{job.budget}</div>
                     </div>
                     
                     <button 
@@ -318,7 +318,7 @@ export default function JobsPage() {
 
             {/* Load More */}
             <div className="flex justify-center pt-8">
-              <button className="group relative bg-white border-2 md:border-4 border-secondary text-secondary px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:text-white rounded-2xl">
+              <button className="group relative bg-surface border-2 md:border-4 border-secondary text-heading px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:text-white rounded-2xl">
                 <span className="relative z-10">LOAD MORE OPPORTUNITIES</span>
                 <div className="absolute inset-0 bg-secondary -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
               </button>

@@ -23,7 +23,7 @@ export default function LoginPage() {
           className="w-full max-w-xl glass p-8 md:p-16 space-y-12 shadow-premium border-white/50"
         >
           <div className="text-center space-y-4">
-            <h1 className="text-4xl md:text-6xl font-display font-black tracking-tighter uppercase">
+            <h1 className="text-4xl md:text-6xl font-display font-black tracking-tighter uppercase text-heading">
               WELCOME <span className="text-primary">BACK</span>
             </h1>
             <p className="text-lg text-muted font-medium">Enter your credentials to continue.</p>
@@ -41,7 +41,7 @@ export default function LoginPage() {
                       placeholder="Enter 10-digit number"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-white/50 border-2 border-secondary/10 px-16 py-5 text-lg font-bold outline-none focus:border-primary transition-all"
+                      className="w-full bg-surface/50 border-2 border-secondary/10 px-16 py-5 text-lg font-bold outline-none focus:border-primary transition-all"
                     />
                   </div>
                 </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
                       placeholder="Enter 6-digit OTP"
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
-                      className="w-full bg-white/50 border-2 border-secondary/10 px-16 py-5 text-lg font-bold outline-none focus:border-primary transition-all tracking-[0.5em] text-center"
+                      className="w-full bg-surface/50 border-2 border-secondary/10 px-16 py-5 text-lg font-bold outline-none focus:border-primary transition-all tracking-[0.5em] text-center"
                     />
                   </div>
                 </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 </button>
                 <button 
                   onClick={() => setStep(1)}
-                  className="w-full text-sm font-bold text-muted uppercase tracking-widest hover:text-secondary transition-colors"
+                  className="w-full text-sm font-bold text-muted uppercase tracking-widest hover:text-heading transition-colors"
                 >
                   Change Phone Number
                 </button>
@@ -83,7 +83,7 @@ export default function LoginPage() {
           <div className="pt-8 border-t border-secondary/5 text-center">
             <p className="text-sm font-medium text-muted">
               Don't have an account?{" "}
-              <Link href="/onboarding" className="text-secondary font-black hover:text-primary transition-colors">
+              <Link href="/onboarding" className="text-heading font-black hover:text-primary transition-colors">
                 JOIN NOW
               </Link>
             </p>

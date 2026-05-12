@@ -96,15 +96,15 @@ export default function WorkerProfilePage({ params }: { params: { id: string } }
             {/* Left Content */}
             <div className="lg:col-span-2 space-y-16">
               <div className="space-y-6">
-                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase">ABOUT ME</h3>
+                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase text-heading">ABOUT ME</h3>
                 <p className="text-xl text-muted leading-relaxed italic">{worker.bio}</p>
               </div>
 
               <div className="space-y-8">
-                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase">SKILLS & SPECIALTIES</h3>
+                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase text-heading">SKILLS & SPECIALTIES</h3>
                 <div className="flex flex-wrap gap-4">
                   {worker.skills.map((skill) => (
-                    <div key={skill} className="bg-white border-2 border-secondary px-6 py-3 font-display font-black uppercase tracking-widest text-sm flex items-center gap-2 shadow-[4px_4px_0px_0px_#0F1C3F]">
+                    <div key={skill} className="bg-surface border-2 border-secondary px-6 py-3 font-display font-black uppercase tracking-widest text-sm flex items-center gap-2 shadow-[4px_4px_0px_0px_#0F1C3F] text-heading">
                       <CheckCircle2 size={18} className="text-primary" /> {skill}
                     </div>
                   ))}
@@ -112,7 +112,7 @@ export default function WorkerProfilePage({ params }: { params: { id: string } }
               </div>
 
               <div className="space-y-8">
-                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase">PORTFOLIO</h3>
+                <h3 className="text-3xl font-display font-black tracking-tighter border-l-8 border-primary pl-6 uppercase text-heading">PORTFOLIO</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {worker.portfolio.map((img, i) => (
                     <motion.div 
@@ -129,12 +129,12 @@ export default function WorkerProfilePage({ params }: { params: { id: string } }
 
             {/* Sticky Sidebar */}
             <aside className="space-y-8">
-              <div className="bg-white p-10 border-2 border-secondary shadow-[16px_16px_0px_0px_#0F1C3F] sticky top-32">
+              <div className="bg-surface p-10 border-2 border-secondary shadow-[16px_16px_0px_0px_#0F1C3F] sticky top-32">
                 <div className="text-center space-y-6">
                   <div className="space-y-2">
                     <div className="text-sm font-black text-muted uppercase tracking-widest">Starting Price</div>
                     <div className="text-6xl font-display font-black text-primary">₹{worker.wage}</div>
-                    <div className="text-xs font-bold text-secondary uppercase tracking-widest">Per 8 Hour Shift</div>
+                    <div className="text-xs font-bold text-heading uppercase tracking-widest">Per 8 Hour Shift</div>
                   </div>
                   
                   <div className="h-px bg-muted/10 w-full" />
@@ -155,12 +155,12 @@ export default function WorkerProfilePage({ params }: { params: { id: string } }
               </div>
 
               <div className="bg-accent/10 p-8 border-2 border-accent/30 space-y-4">
-                <h4 className="font-display font-black uppercase tracking-widest flex items-center gap-2">
+                <h4 className="font-display font-black uppercase tracking-widest flex items-center gap-2 text-heading">
                   <Languages size={20} /> Languages Known
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {worker.languages.map((lang) => (
-                    <span key={lang} className="bg-white px-3 py-1 text-xs font-black border border-accent/50 uppercase">{lang}</span>
+                    <span key={lang} className="bg-surface px-3 py-1 text-xs font-black border border-accent/50 uppercase text-heading">{lang}</span>
                   ))}
                 </div>
               </div>
