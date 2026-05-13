@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as any;
     if (!session || !session.user) {
       return NextResponse.json({ error: "You must be logged in to apply." }, { status: 401 });
     }
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     }
 
     // Get the user and ensure they are a worker
-    const userEmail = session.user.email;
+    const userEmail = session?.user?.email;
     if (!userEmail) return NextResponse.json({ error: "No user email" }, { status: 400 });
 
     const user = await prisma.user.findUnique({
