@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { Menu, X, ArrowRight, User, Briefcase } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
