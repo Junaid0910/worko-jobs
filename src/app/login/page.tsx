@@ -6,18 +6,38 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Mail, Lock, ArrowRight, ShieldCheck, User } from "lucide-react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoginPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    // Handle OAuth errors from URL
+    const oauthError = searchParams.get("error");
+    if (oauthError === "OAuthAccountNotLinked") {
+      setError("This email is already associated with another login method. Please sign in with your email and password.");
+    } else if (oauthError) {
+      setError("An error occurred during authentication. Please try again.");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      const role = (session?.user as any)?.role;
+      router.push(role === "WORKER" ? "/dashboard/worker" : "/dashboard/hirer");
+    }
+  }, [status, session, router]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +55,6 @@ export default function LoginPage() {
 
         if (response?.error) {
           setError(response.error);
-        } else {
-          router.push("/dashboard/hirer"); // Default dashboard
         }
       } else {
         // Sign Up Flow
@@ -52,17 +70,11 @@ export default function LoginPage() {
         }
 
         // Auto login after sign up
-        const loginRes = await signIn("credentials", {
+        await signIn("credentials", {
           email,
           password,
           redirect: false,
         });
-
-        if (loginRes?.error) {
-          setError("Account created, but failed to log in.");
-        } else {
-          router.push("/onboarding"); // Take new users to onboarding
-        }
       }
     } catch (err: any) {
       setError(err.message || "Something went wrong.");

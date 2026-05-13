@@ -7,12 +7,13 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
+export const authOptions: any = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      allowDangerousEmailAccountLinking: true,
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID || "",
@@ -64,20 +65,24 @@ const handler = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (session.user) {
-        (session.user as any).role = token.role;
-        (session.user as any).id = token.id || token.sub;
+        session.user.role = token.role;
+        session.user.id = token.id || token.sub;
       }
       return session;
     },
   },
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   session: {
     strategy: "jwt",
   },
-});
+  debug: process.env.NODE_ENV === "development",
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

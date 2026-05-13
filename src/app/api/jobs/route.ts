@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -36,23 +38,26 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
     const data = await req.json();
     
-    if (!data.userId) {
+    const userId = (session?.user as any)?.id || data.userId;
+
+    if (!userId) {
        return NextResponse.json({ error: "Unauthorized. Please log in." }, { status: 401 });
     }
 
     const hirer = await prisma.hirer.upsert({
-      where: { userId: data.userId },
+      where: { userId: userId },
       update: {},
       create: {
-        userId: data.userId,
+        userId: userId,
         type: "HOMEOWNER",
       }
     });
 
     await prisma.user.update({
-       where: { id: data.userId },
+       where: { id: userId },
        data: { role: "HIRER" }
     });
 

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ArrowRight, User, Briefcase } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollYProgress, scrollY } = useScroll();
@@ -22,6 +23,10 @@ export default function Navbar() {
       setIsScrolled(shouldBeScrolled);
     }
   });
+
+  const dashboardPath = session?.user && (session.user as any).role === "WORKER" 
+    ? "/dashboard/worker" 
+    : "/dashboard/hirer";
 
   return (
     <>
@@ -55,20 +60,39 @@ export default function Navbar() {
                 <NavLink href="/workers" label="Find Pros" />
                 <NavLink href="/jobs" label="Browse Jobs" />
                 <div className="flex items-center gap-6 ml-6 pl-6 border-l border-muted/20">
-                  <Link href="/login" className="text-xs font-black uppercase tracking-widest text-heading hover:text-primary transition-colors">
-                    Login
-                  </Link>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Link href="/onboarding" className="group relative bg-secondary text-white px-8 py-3 text-[10px] font-display font-black uppercase tracking-widest overflow-hidden rounded-xl">
-                      <span className="relative z-10">JOIN NOW</span>
-                      <motion.div 
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="absolute inset-0 bg-primary" 
-                      />
-                    </Link>
-                  </motion.div>
+                  {status === "loading" ? (
+                    <div className="w-20 h-4 bg-muted/20 animate-pulse rounded"></div>
+                  ) : session ? (
+                    <>
+                      <Link href={dashboardPath} className="text-xs font-black uppercase tracking-widest text-heading hover:text-primary transition-colors flex items-center gap-2">
+                        <User size={14} className="text-primary" />
+                        {session.user?.name?.split(' ')[0] || "Dashboard"}
+                      </Link>
+                      <button 
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className="text-xs font-black uppercase tracking-widest text-muted hover:text-red-500 transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login" className="text-xs font-black uppercase tracking-widest text-heading hover:text-primary transition-colors">
+                        Login
+                      </Link>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Link href="/onboarding" className="group relative bg-secondary text-white px-8 py-3 text-[10px] font-display font-black uppercase tracking-widest overflow-hidden rounded-xl">
+                          <span className="relative z-10">JOIN NOW</span>
+                          <motion.div 
+                            initial={{ x: "-100%" }}
+                            whileHover={{ x: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute inset-0 bg-primary" 
+                          />
+                        </Link>
+                      </motion.div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -103,6 +127,12 @@ export default function Navbar() {
                 className="lg:hidden fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-surface z-[105] shadow-2xl flex flex-col p-10 pt-32"
               >
                 <div className="flex flex-col gap-8">
+                  {session && (
+                    <div className="pb-8 border-b border-muted/10">
+                       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Welcome back</p>
+                       <p className="text-3xl font-display font-black text-heading uppercase">{session.user?.name}</p>
+                    </div>
+                  )}
                   <MobileNavLink 
                     href="/workers" 
                     label="Find Professionals" 
@@ -116,21 +146,44 @@ export default function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)} 
                   />
                   
-                  <div className="mt-12 space-y-6 pt-12 border-t border-muted/10">
-                    <Link 
-                      href="/login" 
-                      onClick={() => setIsMobileMenuOpen(false)} 
-                      className="flex justify-between items-center text-2xl font-display font-black uppercase text-heading group"
-                    >
-                      Login <ArrowRight className="group-hover:translate-x-2 transition-transform" />
-                    </Link>
-                    <Link 
-                      href="/onboarding" 
-                      onClick={() => setIsMobileMenuOpen(false)} 
-                      className="w-full bg-primary text-white text-center py-6 text-xl font-display font-black uppercase shadow-glow block rounded-2xl"
-                    >
-                      Get Started
-                    </Link>
+                  <div className="mt-8 space-y-6 pt-8 border-t border-muted/10">
+                    {session ? (
+                      <>
+                        <Link 
+                          href={dashboardPath}
+                          onClick={() => setIsMobileMenuOpen(false)} 
+                          className="flex justify-between items-center text-2xl font-display font-black uppercase text-heading group"
+                        >
+                          My Dashboard <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </Link>
+                        <button 
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            signOut({ callbackUrl: "/" });
+                          }}
+                          className="w-full bg-surface border-2 border-red-500/20 text-red-500 text-center py-5 text-lg font-display font-black uppercase block rounded-2xl"
+                        >
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link 
+                          href="/login" 
+                          onClick={() => setIsMobileMenuOpen(false)} 
+                          className="flex justify-between items-center text-2xl font-display font-black uppercase text-heading group"
+                        >
+                          Login <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </Link>
+                        <Link 
+                          href="/onboarding" 
+                          onClick={() => setIsMobileMenuOpen(false)} 
+                          className="w-full bg-primary text-white text-center py-6 text-xl font-display font-black uppercase shadow-glow block rounded-2xl"
+                        >
+                          Get Started
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
                 
