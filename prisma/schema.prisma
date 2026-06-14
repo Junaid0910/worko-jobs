@@ -14,7 +14,7 @@ model User {
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
-  phone          String?   @unique
+  phone          String?
   role           Role      @default(WORKER)
   city           String?
   locality       String?

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     // Check if user exists
-    let user = await prisma.user.findUnique({
+    let user = await prisma.user.findFirst({
       where: { phone },
     });
 
