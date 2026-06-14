@@ -35,12 +35,12 @@ export default function JobsPage() {
     fetchJobs();
   }, []);
 
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          job.locality.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          job.trade.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredJobs = Array.isArray(jobs) ? jobs.filter(job => {
+    const matchesSearch = (job.title || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          (job.locality || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          (job.trade || "").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesSearch;
-  });
+  }) : [];
 
   return (
     <main className="min-h-screen bg-surface mesh-gradient">
@@ -254,7 +254,7 @@ export default function JobsPage() {
                           {job.trade}
                         </div>
                         <div className="bg-surface-dark text-muted px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full">
-                          {job.type.replace("_", " ")}
+                          {(job.jobType || "").replace("_", " ")}
                         </div>
                       </div>
                       {job.isUrgent && (
