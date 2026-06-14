@@ -18,6 +18,15 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
           include: {
             user: true,
           }
+        },
+        applications: {
+          include: {
+            worker: {
+              include: {
+                user: true
+              }
+            }
+          }
         }
       }
     });

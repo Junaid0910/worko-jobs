@@ -1,5 +1,190 @@
-import UnderConstruction from "@/components/UnderConstruction";
+"use client";
 
-export default function Page() {
-  return <UnderConstruction pageName="Settings" />;
+import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { ArrowLeft, User, MapPin, Settings, ShieldAlert, LogOut } from "lucide-react";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
+
+export default function WorkerSettingsPage() {
+  const { data: session } = useSession();
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!session?.user) return;
+    
+    const fetchUser = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch("/api/dashboard/worker");
+        const data = await res.json();
+        if (res.ok) {
+          setName(session.user.name || "");
+          setEmail(session.user.email || "");
+          setCity(data.user?.city || "");
+        }
+      } catch (err) {
+        console.error("Failed to load user settings", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [session]);
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setSaveLoading(true);
+      setMessage("");
+      setError("");
+
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role: "WORKER",
+          name,
+          city,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update settings.");
+
+      setMessage("Account settings updated successfully!");
+    } catch (err: any) {
+      setError(err.message || "Failed to save settings.");
+    } finally {
+      setSaveLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-surface mesh-gradient">
+        <Navbar />
+        <div className="flex justify-center items-center min-h-[60vh] pt-40">
+          <div className="w-16 h-16 border-4 border-secondary border-t-primary rounded-full animate-spin"></div>
+        </div>
+        <Footer />
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-surface mesh-gradient">
+      <Navbar />
+
+      <div className="pt-32 md:pt-40 pb-20 max-w-4xl mx-auto px-6 lg:px-8">
+        <div className="space-y-12">
+          {/* Back button */}
+          <Link href="/dashboard/worker" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted hover:text-primary transition-colors">
+            <ArrowLeft size={16} /> Back to Dashboard
+          </Link>
+
+          {/* Header */}
+          <div className="space-y-2">
+            <div className="inline-block bg-accent/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-dark border border-accent/30">
+              Account Settings
+            </div>
+            <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none text-heading">
+              SETTINGS
+            </h1>
+            <p className="text-xl text-muted font-medium">Manage your personal account profile and preferences</p>
+          </div>
+
+          {message && (
+            <div className="bg-green-500/10 border border-green-500/20 text-green-700 p-4 rounded-xl text-center font-bold">
+              {message}
+            </div>
+          )}
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl text-center font-bold">
+              {error}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Sidebar list */}
+            <div className="bg-white/80 backdrop-blur-md border border-white/60 p-6 rounded-3xl shadow-sm h-fit space-y-4">
+              <button className="w-full text-left px-4 py-3 bg-secondary/5 border-l-4 border-primary text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                <User size={16} /> Account Info
+              </button>
+              <button 
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-full text-left px-4 py-3 text-xs font-black uppercase tracking-widest text-red-500 hover:bg-red-500/5 transition-colors flex items-center gap-2"
+              >
+                <LogOut size={16} /> Sign Out
+              </button>
+            </div>
+
+            {/* Form */}
+            <div className="md:col-span-2">
+              <form onSubmit={handleUpdate} className="bg-white/80 backdrop-blur-md border border-white/60 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    <User size={16} className="text-primary" /> Full Name
+                  </label>
+                  <input 
+                    type="text" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required 
+                    placeholder="John Doe" 
+                    className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    <MapPin size={16} className="text-primary" /> City / Location
+                  </label>
+                  <input 
+                    type="text" 
+                    value={city} 
+                    onChange={(e) => setCity(e.target.value)} 
+                    required 
+                    placeholder="Mumbai" 
+                    className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    Email Address (Read-only)
+                  </label>
+                  <input 
+                    type="email" 
+                    value={email} 
+                    disabled
+                    className="w-full bg-surface-dark/5 border-2 border-secondary/5 px-6 py-4 font-bold outline-none text-muted rounded-xl cursor-not-allowed" 
+                  />
+                </div>
+
+                <button 
+                  type="submit" 
+                  disabled={saveLoading}
+                  className="w-full bg-secondary text-white py-5 mt-4 text-xs font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 rounded-xl shadow-glow"
+                >
+                  {saveLoading ? "SAVING..." : "SAVE SETTINGS"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
 }

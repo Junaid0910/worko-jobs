@@ -285,8 +285,8 @@ export default function JobsPage() {
                       <div className="text-4xl font-display font-black text-heading">₹{job.budgetPerDay}</div>
                     </div>
                     
-                    <button 
-                      onClick={() => setIsSuccessModalOpen(true)}
+                    <Link 
+                      href={`/jobs/${job.id}`}
                       className="group/btn relative w-full bg-secondary text-white py-5 text-[11px] font-display font-black uppercase tracking-widest flex items-center justify-center gap-2 overflow-hidden transition-all hover:shadow-glow rounded-xl"
                     >
                       <span className="relative z-10 flex items-center gap-2">
@@ -298,7 +298,7 @@ export default function JobsPage() {
                         transition={{ duration: 0.5 }}
                         className="absolute inset-0 bg-primary" 
                       />
-                    </button>
+                    </Link>
                   </div>
 
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />

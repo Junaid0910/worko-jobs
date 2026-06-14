@@ -25,7 +25,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-xl text-muted max-w-sm leading-relaxed font-medium">
-              Revolutionizing the way Bharat hires skilled tradespeople. Excellence in every trade, trust in every connection.
+              Revolutionizing the way India hires skilled tradespeople. Excellence in every trade, trust in every connection.
             </p>
             <div className="flex gap-6">
               {[Globe, MessageCircle, Share2, Mail].map((Icon, i) => (
@@ -59,7 +59,7 @@ export default function Footer() {
 
         <div className="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-sm font-bold text-muted uppercase tracking-widest">
-            © 2026 WORKO. MADE WITH PRIDE IN BHARAT.
+            © 2026 WORKO. MADE WITH PRIDE IN INDIA.
           </p>
           <div className="flex gap-12 text-sm font-bold text-muted uppercase tracking-widest">
             <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>

@@ -59,3 +59,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const session = (await getServerSession(authOptions)) as any;
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "You must be logged in to update applications." }, { status: 401 });
+    }
+
+    const { applicationId, status } = await req.json();
+
+    if (!applicationId || !status) {
+      return NextResponse.json({ error: "Application ID and status are required." }, { status: 400 });
+    }
+
+    const updatedApplication = await prisma.application.update({
+      where: { id: applicationId },
+      data: { status },
+    });
+
+    return NextResponse.json({ success: true, application: updatedApplication });
+  } catch (error: any) {
+    console.error("Application update error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}

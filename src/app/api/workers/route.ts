@@ -62,3 +62,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Failed to create worker profile" }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const data = await req.json();
+    const { userId, trade, experience, dailyWage, bio, languages, isAvailable } = data;
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+
+    const worker = await prisma.worker.update({
+      where: { userId: userId },
+      data: {
+        trade,
+        experience: parseInt(experience),
+        dailyWage: parseInt(dailyWage),
+        bio,
+        languages: Array.isArray(languages) ? languages : [languages],
+        isAvailable: isAvailable !== undefined ? isAvailable : true,
+      }
+    });
+
+    return NextResponse.json(worker);
+  } catch (error: any) {
+    console.error("Worker profile update error:", error);
+    return NextResponse.json({ error: "Failed to update worker profile: " + error.message }, { status: 500 });
+  }
+}

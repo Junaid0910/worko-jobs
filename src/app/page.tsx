@@ -26,7 +26,7 @@ const stats = [
 
 export default function Home() {
   const containerRef = useRef(null);
-  const titleWords = "Bharat ke Kaarigar, Ab Digital".split(" ");
+  const titleWords = "India's Skilled Trades, Now Digital".split(" ");
 
   return (
     <main className="min-h-screen bg-surface mesh-gradient selection:bg-primary selection:text-white" ref={containerRef}>
@@ -46,7 +46,7 @@ export default function Home() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                 </span>
-                Bharat's Most Trusted Trade Network
+                India's Most Trusted Trade Network
               </motion.div>
               
               <h1 className="text-fluid-h1 font-display font-black tracking-tighter leading-[0.85] break-words">
@@ -429,7 +429,7 @@ export default function Home() {
                 READY TO <span className="text-primary italic inline-block hover:scale-110 transition-transform">JOIN US?</span>
               </h2>
               <p className="text-xl md:text-3xl text-muted font-medium max-w-3xl mx-auto leading-relaxed">
-                Be a part of Bharat's most advanced and trusted trade network. Experience the future of skilled work.
+                Be a part of India's most advanced and trusted trade network. Experience the future of skilled work.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row justify-center gap-6 md:gap-10 relative z-10">
