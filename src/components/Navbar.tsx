@@ -49,7 +49,7 @@ export default function Navbar() {
                   whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
                   className="transition-transform duration-500 rounded-lg overflow-hidden flex items-center justify-center bg-white"
                 >
-                  <Image src="/logoimage.png" alt="Worko Logo" width={48} height={48} className="object-cover" />
+                  <Image src="/logoimage.png" alt="Worko Logo" width={48} height={48} className="object-cover" style={{ height: "auto" }} />
                 </motion.div>
                 <span className="text-xl md:text-2xl font-display font-extrabold tracking-tighter uppercase text-heading">
                   Wor<span className="text-primary">ko</span>
