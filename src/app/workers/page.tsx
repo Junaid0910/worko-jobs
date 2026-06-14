@@ -14,6 +14,10 @@ export default function WorkersPage() {
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTrade, setSelectedTrade] = useState("ALL");
+  const [minRating, setMinRating] = useState<number | null>(null);
+  const [maxWage, setMaxWage] = useState<number>(2000);
+  const [onlyAvailable, setOnlyAvailable] = useState(true);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -40,6 +44,14 @@ export default function WorkersPage() {
     setIsSuccessModalOpen(true);
   };
 
+  const handleResetFilters = () => {
+    setSelectedTrade("ALL");
+    setMinRating(null);
+    setMaxWage(2000);
+    setOnlyAvailable(true);
+    setSearchQuery("");
+  };
+
   const filteredWorkers = workers.filter(worker => {
     const name = worker.user?.name || "";
     const city = worker.user?.city || "";
@@ -49,7 +61,12 @@ export default function WorkersPage() {
                           city.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           locality.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           worker.trade.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+
+    const matchesRating = minRating === null || worker.rating >= minRating;
+    const matchesWage = worker.dailyWage <= maxWage;
+    const matchesAvailability = !onlyAvailable || worker.isAvailable;
+
+    return matchesSearch && matchesRating && matchesWage && matchesAvailability;
   });
 
   return (
@@ -102,21 +119,36 @@ export default function WorkersPage() {
                         <option value="CARPENTER">Carpenter</option>
                         <option value="PAINTER">Painter</option>
                         <option value="MASON">Mason</option>
+                        <option value="WELDER">Welder</option>
                       </select>
                     </FilterGroup>
 
                     <FilterGroup title="Minimum Rating">
                       <div className="flex gap-2">
                         {[3, 4, 4.5].map((r) => (
-                          <button key={r} className="flex-1 py-2 rounded-xl border border-secondary/10 text-[10px] font-black uppercase hover:bg-primary hover:text-white transition-all">
+                          <button 
+                            key={r} 
+                            onClick={() => setMinRating(minRating === r ? null : r)}
+                            className={`flex-1 py-2 rounded-xl border text-[10px] font-black uppercase transition-all ${
+                              minRating === r ? "bg-primary text-white border-primary" : "border-secondary/10 hover:bg-primary/5 hover:text-primary"
+                            }`}
+                          >
                             {r}+ <Star size={8} className="inline fill-current" />
                           </button>
                         ))}
                       </div>
                     </FilterGroup>
 
-                    <FilterGroup title="Daily Wage Range">
-                      <input type="range" min="300" max="2000" step="100" className="w-full accent-primary" />
+                    <FilterGroup title={`Daily Wage Range (Max: ₹${maxWage})`}>
+                      <input 
+                        type="range" 
+                        min="300" 
+                        max="2000" 
+                        step="100" 
+                        value={maxWage}
+                        onChange={(e) => setMaxWage(parseInt(e.target.value))}
+                        className="w-full accent-primary" 
+                      />
                       <div className="flex justify-between text-[10px] font-black text-muted uppercase mt-2">
                         <span>₹300</span>
                         <span>₹2000+</span>
@@ -125,7 +157,12 @@ export default function WorkersPage() {
 
                     <FilterGroup title="Availability">
                       <label className="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" defaultChecked />
+                        <input 
+                          type="checkbox" 
+                          className="w-5 h-5 rounded-md accent-primary" 
+                          checked={onlyAvailable}
+                          onChange={(e) => setOnlyAvailable(e.target.checked)}
+                        />
                         <span className="text-sm font-bold text-heading">Available Now</span>
                       </label>
                     </FilterGroup>
@@ -145,7 +182,10 @@ export default function WorkersPage() {
           {/* Filter Sidebar - Desktop */}
           <aside className="hidden lg:block w-80 space-y-10">
             <div className="glass p-8 rounded-3xl border-white/60 shadow-premium sticky top-32">
-              <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading mb-8">Refine Search</h3>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading">Refine Search</h3>
+                <button onClick={handleResetFilters} className="text-[10px] font-black text-primary uppercase tracking-widest">Reset</button>
+              </div>
               
               <div className="space-y-8">
                 <FilterGroup title="Trade Category">
@@ -160,21 +200,36 @@ export default function WorkersPage() {
                     <option value="CARPENTER">Carpenter</option>
                     <option value="PAINTER">Painter</option>
                     <option value="MASON">Mason</option>
+                    <option value="WELDER">Welder</option>
                   </select>
                 </FilterGroup>
 
                 <FilterGroup title="Minimum Rating">
                   <div className="flex gap-2">
                     {[3, 4, 4.5].map((r) => (
-                      <button key={r} className="flex-1 py-2 rounded-xl border border-secondary/10 text-[10px] font-black uppercase hover:bg-primary hover:text-white transition-all">
+                      <button 
+                        key={r} 
+                        onClick={() => setMinRating(minRating === r ? null : r)}
+                        className={`flex-1 py-2 rounded-xl border text-[10px] font-black uppercase transition-all ${
+                          minRating === r ? "bg-primary text-white border-primary" : "border-secondary/10 hover:bg-primary/5 hover:text-primary"
+                        }`}
+                      >
                         {r}+ <Star size={8} className="inline fill-current" />
                       </button>
                     ))}
                   </div>
                 </FilterGroup>
 
-                <FilterGroup title="Daily Wage Range">
-                  <input type="range" min="300" max="2000" step="100" className="w-full accent-primary" />
+                <FilterGroup title={`Daily Wage Range (Max: ₹${maxWage})`}>
+                  <input 
+                    type="range" 
+                    min="300" 
+                    max="2000" 
+                    step="100" 
+                    value={maxWage}
+                    onChange={(e) => setMaxWage(parseInt(e.target.value))}
+                    className="w-full accent-primary" 
+                  />
                   <div className="flex justify-between text-[10px] font-black text-muted uppercase mt-2">
                     <span>₹300</span>
                     <span>₹2000+</span>
@@ -183,14 +238,22 @@ export default function WorkersPage() {
 
                 <FilterGroup title="Availability">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" defaultChecked />
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 rounded-md accent-primary" 
+                      checked={onlyAvailable}
+                      onChange={(e) => setOnlyAvailable(e.target.checked)}
+                    />
                     <span className="text-sm font-bold text-heading">Available Now</span>
                   </label>
                 </FilterGroup>
               </div>
 
-              <button className="w-full mt-10 bg-secondary text-white py-4 rounded-xl font-display font-black uppercase tracking-widest text-xs hover:bg-primary transition-all shadow-glow">
-                Apply Filters
+              <button 
+                onClick={handleResetFilters}
+                className="w-full mt-10 bg-secondary text-white py-4 rounded-xl font-display font-black uppercase tracking-widest text-xs hover:bg-primary transition-all shadow-glow"
+              >
+                Reset Filters
               </button>
             </div>
           </aside>
@@ -258,12 +321,18 @@ export default function WorkersPage() {
                    className="group relative bg-surface/80 backdrop-blur-md border border-white/50 p-8 md:p-10 space-y-8 shadow-premium transition-all hover:border-primary/40 rounded-3xl overflow-hidden shine-effect"
                 >
                   <div className="flex justify-between items-start relative z-10">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: -2 }}
-                      className="w-20 h-20 md:w-28 md:h-28 bg-surface-dark border-4 border-white overflow-hidden relative shadow-xl rounded-2xl transition-transform flex items-center justify-center text-4xl font-display font-black text-heading"
-                    >
-                      {worker.user?.name?.[0] || "?"}
-                    </motion.div>
+                    <Link href={`/workers/${worker.id}`}>
+                      <motion.div 
+                        whileHover={{ scale: 1.05, rotate: -2 }}
+                        className="w-20 h-20 md:w-28 md:h-28 bg-surface-dark border-4 border-white overflow-hidden relative shadow-xl rounded-2xl transition-transform flex items-center justify-center text-4xl font-display font-black text-white"
+                      >
+                        {worker.profilePhoto || worker.user?.image ? (
+                          <img src={worker.profilePhoto || worker.user?.image} alt={worker.user?.name} className="w-full h-full object-cover" />
+                        ) : (
+                          worker.user?.name?.[0] || "?"
+                        )}
+                      </motion.div>
+                    </Link>
                     <div className="flex flex-col items-end gap-2">
                       {worker.isVerified && (
                         <div className="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full font-black text-[9px] uppercase tracking-widest shadow-sm">
@@ -271,7 +340,7 @@ export default function WorkersPage() {
                         </div>
                       )}
                       <div className="flex items-center gap-1 text-accent font-black text-sm">
-                        <Star size={16} fill="currentColor" /> {worker.rating || "New"}
+                        <Star size={16} fill="currentColor" /> {worker.rating > 0 ? worker.rating.toFixed(1) : "New"}
                       </div>
                     </div>
                   </div>
@@ -283,7 +352,9 @@ export default function WorkersPage() {
                           {worker.trade}
                         </div>
                         <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight leading-none group-hover:text-primary transition-colors line-clamp-1">
-                          {worker.user?.name || "Anonymous"}
+                          <Link href={`/workers/${worker.id}`}>
+                            {worker.user?.name || "Anonymous"}
+                          </Link>
                         </h2>
                       </div>
                     </div>
@@ -304,12 +375,12 @@ export default function WorkersPage() {
                       >
                         Request Quote
                       </button>
-                      <button 
-                        onClick={() => setIsSuccessModalOpen(true)}
+                      <Link 
+                        href={`/workers/${worker.id}`}
                         className="w-14 h-14 bg-secondary text-white flex items-center justify-center hover:bg-primary transition-all rounded-xl shadow-premium"
                       >
                         <ArrowRight size={24} />
-                      </button>
+                      </Link>
                     </div>
                   </div>
 

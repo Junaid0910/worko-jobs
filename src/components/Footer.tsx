@@ -62,9 +62,9 @@ export default function Footer() {
             © 2026 WORKO. MADE WITH PRIDE IN INDIA.
           </p>
           <div className="flex gap-12 text-sm font-bold text-muted uppercase tracking-widest">
-            <Link href="#" className="hover:text-primary transition-colors">Privacy</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Cookies</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Security</Link>
+            <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
+            <Link href="/privacy" className="hover:text-primary transition-colors">Cookies</Link>
+            <Link href="/terms" className="hover:text-primary transition-colors">Security</Link>
           </div>
         </div>
       </div>

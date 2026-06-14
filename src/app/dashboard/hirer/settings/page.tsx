@@ -7,7 +7,7 @@ import { ArrowLeft, User, MapPin, ShieldAlert, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 
-export default function WorkerSettingsPage() {
+export default function HirerSettingsPage() {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("INFO");
   const [name, setName] = useState("");
@@ -24,11 +24,11 @@ export default function WorkerSettingsPage() {
     const fetchUser = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch("/api/dashboard/worker");
+        const res = await fetch("/api/dashboard/hirer");
         const data = await res.json();
         if (res.ok) {
-          setName(session.user.name || "");
-          setEmail(session.user.email || "");
+          setName(data.user?.name || "");
+          setEmail(data.user?.email || "");
           setCity(data.user?.city || "");
         }
       } catch (err) {
@@ -52,7 +52,7 @@ export default function WorkerSettingsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          role: "WORKER",
+          role: "HIRER",
           name,
           city,
         }),
@@ -70,7 +70,7 @@ export default function WorkerSettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    const confirmDelete = confirm("WARNING: Are you absolutely sure you want to permanently delete your account? This action is irreversible and all your profile data, applications, and reviews will be deleted.");
+    const confirmDelete = confirm("WARNING: Are you absolutely sure you want to permanently delete your account? This action is irreversible. All your job listings, applicants, and reviews will be deleted forever.");
     if (!confirmDelete) return;
 
     try {
@@ -114,14 +114,14 @@ export default function WorkerSettingsPage() {
       <div className="pt-32 md:pt-40 pb-20 max-w-4xl mx-auto px-6 lg:px-8">
         <div className="space-y-12">
           {/* Back button */}
-          <Link href="/dashboard/worker" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted hover:text-primary transition-colors">
+          <Link href="/dashboard/hirer" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted hover:text-primary transition-colors">
             <ArrowLeft size={16} /> Back to Dashboard
           </Link>
 
           {/* Header */}
           <div className="space-y-2">
             <div className="inline-block bg-accent/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary-dark border border-accent/30">
-              Account Settings
+              Hirer Portal Settings
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none text-heading">
               SETTINGS
@@ -224,7 +224,7 @@ export default function WorkerSettingsPage() {
                 <div className="bg-white/80 backdrop-blur-md border border-red-500/20 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
                   <h3 className="text-2xl font-display font-black text-red-600 uppercase">DELETE YOUR ACCOUNT</h3>
                   <p className="text-sm text-muted leading-relaxed font-semibold">
-                    Deleting your account will permanently remove all your profile data, trade details, applications, and reviews. This action cannot be undone.
+                    Deleting your account will permanently remove all your profile data, active job listings, applicants, and reviews. This action cannot be undone.
                   </p>
                   <button 
                     onClick={handleDeleteAccount}

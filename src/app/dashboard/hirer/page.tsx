@@ -31,6 +31,28 @@ export default function HirerDashboard() {
     fetchJobs();
   }, [session]);
 
+  const handleCloseJob = async (jobId: string) => {
+    const confirmClose = confirm("Are you sure you want to close this job listing? It will no longer be visible to workers.");
+    if (!confirmClose) return;
+
+    try {
+      const res = await fetch(`/api/jobs/${jobId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: false })
+      });
+      if (res.ok) {
+        setActiveJobs(prev => prev.filter(j => j.id !== jobId));
+      } else {
+        const errData = await res.json();
+        alert(errData.error || "Failed to close listing.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to close listing.");
+    }
+  };
+
   const totalApplicants = activeJobs.reduce((acc, job) => acc + (job.applications?.length || 0), 0);
 
   return (
@@ -52,9 +74,14 @@ export default function HirerDashboard() {
               <p className="text-xl text-muted font-medium">Post new jobs and track applicants in one place</p>
             </div>
             
-            <Link href="/post-job" className="bg-primary text-white px-10 py-5 text-xl font-display font-black rounded-none shadow-[8px_8px_0px_0px_#0F1C3F] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2">
-              <Plus size={24} /> POST NEW JOB
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <Link href="/dashboard/hirer/settings" className="bg-white border-2 border-secondary text-secondary px-8 py-5 text-lg font-display font-black flex items-center justify-center gap-2 shadow-[8px_8px_0px_0px_#0F1C3F] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+                SETTINGS
+              </Link>
+              <Link href="/post-job" className="bg-primary text-white px-8 py-5 text-lg font-display font-black shadow-[8px_8px_0px_0px_#0F1C3F] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all flex items-center justify-center gap-2">
+                <Plus size={20} /> POST NEW JOB
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -99,7 +126,10 @@ export default function HirerDashboard() {
                       <Link href={`/dashboard/hirer/jobs/${job.id}`} className="bg-secondary text-white px-8 py-3 text-xs font-display font-black uppercase tracking-widest text-center hover:bg-surface-dark transition-colors">
                         VIEW APPLICANTS
                       </Link>
-                      <button className="text-[10px] font-black text-muted uppercase tracking-widest hover:text-primary transition-colors">
+                      <button 
+                        onClick={() => handleCloseJob(job.id)}
+                        className="text-[10px] font-black text-muted uppercase tracking-widest hover:text-primary transition-colors"
+                      >
                         Close Listing
                       </button>
                     </div>

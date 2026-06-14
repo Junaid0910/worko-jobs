@@ -101,10 +101,10 @@ export default function WorkerDashboard() {
               <Link href="/dashboard/worker" className="flex items-center gap-4 px-6 py-4 font-bold text-sm bg-primary text-white">
                 <Briefcase size={18} /> DASHBOARD
               </Link>
-              <Link href="#" className="flex items-center gap-4 px-6 py-4 font-bold text-sm hover:bg-surface transition-colors">
+              <Link href="/dashboard/worker/profile" className="flex items-center gap-4 px-6 py-4 font-bold text-sm hover:bg-surface transition-colors">
                 <User size={18} /> MY PROFILE
               </Link>
-              <Link href="#" className="flex items-center gap-4 px-6 py-4 font-bold text-sm hover:bg-surface transition-colors">
+              <Link href="/dashboard/worker/settings" className="flex items-center gap-4 px-6 py-4 font-bold text-sm hover:bg-surface transition-colors">
                 <Settings size={18} /> SETTINGS
               </Link>
             </nav>
@@ -114,9 +114,9 @@ export default function WorkerDashboard() {
                 <h4 className="font-display font-black tracking-tight uppercase">GO PREMIUM</h4>
                 <p className="text-xs text-muted leading-relaxed">Featured workers get 10x more visibility and job requests.</p>
               </div>
-              <button className="w-full bg-accent text-primary-dark py-3 font-display font-black uppercase tracking-widest text-xs hover:bg-yellow-400 transition-colors">
+              <Link href="/verification" className="w-full bg-accent text-primary-dark py-3 font-display font-black uppercase tracking-widest text-xs hover:bg-yellow-400 transition-colors block text-center">
                 UPGRADE NOW
-              </button>
+              </Link>
             </div>
           </aside>
 
@@ -210,9 +210,9 @@ export default function WorkerDashboard() {
                   <h3 className="text-4xl font-display font-black tracking-tighter uppercase">GET THE VERIFIED BADGE</h3>
                   <p className="text-white/80 font-medium max-w-lg">Upload your ITI certificate and ID proof to build trust with hirers and get 5x more job offers.</p>
                 </div>
-                <button className="bg-white text-primary px-8 py-4 font-display font-black uppercase tracking-widest text-sm hover:bg-accent transition-colors relative z-10 shrink-0">
+                <Link href="/verification" className="bg-white text-primary px-8 py-4 font-display font-black uppercase tracking-widest text-sm hover:bg-accent transition-colors relative z-10 shrink-0">
                   UPLOAD DOCUMENTS
-                </button>
+                </Link>
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl" />
               </div>
             )}

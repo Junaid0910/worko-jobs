@@ -1,19 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Search, MapPin, Clock, ArrowRight, AlertCircle, TrendingUp, Briefcase, Filter, X } from "lucide-react";
 import Link from "next/link";
-
-import { useEffect } from "react";
-
 import SuccessModal from "@/components/SuccessModal";
 
 export default function JobsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("ALL");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [minBudget, setMinBudget] = useState("");
+  const [selectedTradeFilter, setSelectedTradeFilter] = useState("ALL");
+  const [onlyUrgent, setOnlyUrgent] = useState(false);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -35,11 +36,33 @@ export default function JobsPage() {
     fetchJobs();
   }, []);
 
+  const handleResetFilters = () => {
+    setSelectedTypes([]);
+    setMinBudget("");
+    setSelectedTradeFilter("ALL");
+    setOnlyUrgent(false);
+    setSearchQuery("");
+  };
+
+  const handleTypeChange = (type: string, checked: boolean) => {
+    if (checked) {
+      setSelectedTypes(prev => [...prev, type]);
+    } else {
+      setSelectedTypes(prev => prev.filter(t => t !== type));
+    }
+  };
+
   const filteredJobs = Array.isArray(jobs) ? jobs.filter(job => {
     const matchesSearch = (job.title || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
                           (job.locality || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (job.trade || "").toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+                          
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(job.jobType);
+    const matchesBudget = !minBudget || job.budgetPerDay >= parseInt(minBudget);
+    const matchesTrade = selectedTradeFilter === "ALL" || job.trade === selectedTradeFilter;
+    const matchesUrgent = !onlyUrgent || job.isUrgent;
+
+    return matchesSearch && matchesType && matchesBudget && matchesTrade && matchesUrgent;
   }) : [];
 
   return (
@@ -84,7 +107,12 @@ export default function JobsPage() {
                       <div className="space-y-3">
                         {["ONE_TIME", "WEEKLY", "FULLTIME"].map((type) => (
                           <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                            <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
+                            <input 
+                              type="checkbox" 
+                              className="w-5 h-5 rounded-md accent-primary" 
+                              checked={selectedTypes.includes(type)}
+                              onChange={(e) => handleTypeChange(type, e.target.checked)}
+                            />
                             <span className="text-sm font-bold text-heading group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
                           </label>
                         ))}
@@ -94,22 +122,40 @@ export default function JobsPage() {
                     <FilterGroup title="Min. Daily Budget">
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-black text-heading">₹</span>
-                        <input type="number" placeholder="500" className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
+                        <input 
+                          type="number" 
+                          placeholder="500" 
+                          value={minBudget}
+                          onChange={(e) => setMinBudget(e.target.value)}
+                          className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" 
+                        />
                       </div>
                     </FilterGroup>
 
                     <FilterGroup title="Trade Required">
-                      <select className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
-                        <option>All Trades</option>
-                        <option>Electrician</option>
-                        <option>Plumber</option>
-                        <option>Carpenter</option>
+                      <select 
+                        value={selectedTradeFilter}
+                        onChange={(e) => setSelectedTradeFilter(e.target.value)}
+                        className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary"
+                      >
+                        <option value="ALL">All Trades</option>
+                        <option value="ELECTRICIAN">Electrician</option>
+                        <option value="PLUMBER">Plumber</option>
+                        <option value="CARPENTER">Carpenter</option>
+                        <option value="PAINTER">Painter</option>
+                        <option value="MASON">Mason</option>
+                        <option value="WELDER">Welder</option>
                       </select>
                     </FilterGroup>
 
                     <FilterGroup title="Urgency">
                       <label className="flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
+                        <input 
+                          type="checkbox" 
+                          className="w-5 h-5 rounded-md accent-primary" 
+                          checked={onlyUrgent}
+                          onChange={(e) => setOnlyUrgent(e.target.checked)}
+                        />
                         <span className="text-sm font-bold text-heading">Urgent Jobs Only</span>
                       </label>
                     </FilterGroup>
@@ -131,7 +177,7 @@ export default function JobsPage() {
             <div className="glass p-8 rounded-3xl border-white/60 shadow-premium sticky top-32">
               <div className="flex justify-between items-center mb-8">
                 <h3 className="text-xl font-display font-black uppercase tracking-tight text-heading">Filters</h3>
-                <button className="text-[10px] font-black text-primary uppercase tracking-widest">Reset</button>
+                <button onClick={handleResetFilters} className="text-[10px] font-black text-primary uppercase tracking-widest">Reset</button>
               </div>
               
               <div className="space-y-8">
@@ -139,7 +185,12 @@ export default function JobsPage() {
                   <div className="space-y-3">
                     {["ONE_TIME", "WEEKLY", "FULLTIME"].map((type) => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                        <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
+                        <input 
+                          type="checkbox" 
+                          className="w-5 h-5 rounded-md accent-primary" 
+                          checked={selectedTypes.includes(type)}
+                          onChange={(e) => handleTypeChange(type, e.target.checked)}
+                        />
                         <span className="text-sm font-bold text-heading group-hover:text-primary transition-colors">{type.replace("_", " ")}</span>
                       </label>
                     ))}
@@ -149,29 +200,50 @@ export default function JobsPage() {
                 <FilterGroup title="Min. Daily Budget">
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-black text-heading">₹</span>
-                    <input type="number" placeholder="500" className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" />
+                    <input 
+                      type="number" 
+                      placeholder="500" 
+                      value={minBudget}
+                      onChange={(e) => setMinBudget(e.target.value)}
+                      className="w-full bg-surface/50 border border-secondary/10 px-4 py-2 rounded-xl text-sm font-bold outline-none focus:border-primary" 
+                    />
                   </div>
                 </FilterGroup>
 
                 <FilterGroup title="Trade Required">
-                  <select className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary">
-                    <option>All Trades</option>
-                    <option>Electrician</option>
-                    <option>Plumber</option>
-                    <option>Carpenter</option>
+                  <select 
+                    value={selectedTradeFilter}
+                    onChange={(e) => setSelectedTradeFilter(e.target.value)}
+                    className="w-full bg-surface/50 border border-secondary/10 px-4 py-3 rounded-xl text-sm font-bold outline-none focus:border-primary"
+                  >
+                    <option value="ALL">All Trades</option>
+                    <option value="ELECTRICIAN">Electrician</option>
+                    <option value="PLUMBER">Plumber</option>
+                    <option value="CARPENTER">Carpenter</option>
+                    <option value="PAINTER">Painter</option>
+                    <option value="MASON">Mason</option>
+                    <option value="WELDER">Welder</option>
                   </select>
                 </FilterGroup>
 
                 <FilterGroup title="Urgency">
                   <label className="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" className="w-5 h-5 rounded-md accent-primary" />
+                    <input 
+                      type="checkbox" 
+                      className="w-5 h-5 rounded-md accent-primary" 
+                      checked={onlyUrgent}
+                      onChange={(e) => setOnlyUrgent(e.target.checked)}
+                    />
                     <span className="text-sm font-bold text-heading">Urgent Jobs Only</span>
                   </label>
                 </FilterGroup>
               </div>
 
-              <button className="w-full mt-10 bg-primary text-white py-4 rounded-xl font-display font-black uppercase tracking-widest text-xs hover:bg-secondary transition-all shadow-glow">
-                Apply Filters
+              <button 
+                onClick={handleResetFilters}
+                className="w-full mt-10 bg-primary text-white py-4 rounded-xl font-display font-black uppercase tracking-widest text-xs hover:bg-secondary transition-all shadow-glow"
+              >
+                Reset Filters
               </button>
             </div>
 
@@ -205,12 +277,12 @@ export default function JobsPage() {
                     LATEST <span className="text-primary">GIGS</span>
                   </h1>
                 </div>
-                <button 
-                  onClick={() => setIsSuccessModalOpen(true)}
+                <Link 
+                  href="/post-job"
                   className="bg-secondary text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all shadow-premium"
                 >
                   Post a Job
-                </button>
+                </Link>
               </div>
 
               <div className="flex gap-4">
@@ -224,6 +296,12 @@ export default function JobsPage() {
                   />
                   <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={24} />
                 </div>
+                <button 
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                   className="lg:hidden glass p-4 rounded-2xl border-secondary/10 flex items-center justify-center text-heading"
+                >
+                  <Filter size={24} />
+                </button>
               </div>
             </div>
 
@@ -308,12 +386,14 @@ export default function JobsPage() {
             )}
 
             {/* Load More */}
-            <div className="flex justify-center pt-8">
-              <button className="group relative bg-surface border-2 md:border-4 border-secondary text-heading px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:text-white rounded-2xl">
-                <span className="relative z-10">LOAD MORE OPPORTUNITIES</span>
-                <div className="absolute inset-0 bg-secondary -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              </button>
-            </div>
+            {!isLoading && filteredJobs.length > 0 && (
+              <div className="flex justify-center pt-8">
+                <button className="group relative bg-surface border-2 md:border-4 border-secondary text-heading px-12 py-6 text-lg font-display font-black uppercase tracking-widest overflow-hidden transition-all hover:text-white rounded-2xl">
+                  <span className="relative z-10">LOAD MORE OPPORTUNITIES</span>
+                  <div className="absolute inset-0 bg-secondary -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -323,7 +403,6 @@ export default function JobsPage() {
   );
 }
 
-
 function FilterGroup({ title, children }: any) {
   return (
     <div className="space-y-4">
@@ -332,6 +411,3 @@ function FilterGroup({ title, children }: any) {
     </div>
   );
 }
-
-
-
