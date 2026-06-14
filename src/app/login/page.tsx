@@ -189,15 +189,18 @@ function LoginContent() {
                     exit={{ opacity: 0, height: 0 }}
                     className="space-y-2 overflow-hidden"
                   >
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Full Name</label>
+                    <label htmlFor="fullName" className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Full Name</label>
                     <div className="relative group">
                       <User className="absolute left-5 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={18} />
                       <input 
+                        id="fullName"
+                        name="name"
                         type="text" 
                         placeholder="John Doe"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required={!isLogin}
+                        autoComplete="name"
                         className="w-full bg-surface/50 border-2 border-secondary/10 px-14 py-4 text-sm font-bold outline-none focus:border-primary rounded-2xl transition-all"
                       />
                     </div>
@@ -206,15 +209,18 @@ function LoginContent() {
               </AnimatePresence>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Email Address</label>
+                <label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-muted ml-2">Email Address</label>
                 <div className="relative group">
                   <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={18} />
                   <input 
+                    id="email"
+                    name="email"
                     type="email" 
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    autoComplete="email"
                     className="w-full bg-surface/50 border-2 border-secondary/10 px-14 py-4 text-sm font-bold outline-none focus:border-primary rounded-2xl transition-all"
                   />
                 </div>
@@ -222,17 +228,20 @@ function LoginContent() {
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center ml-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-muted">Password</label>
+                  <label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-muted">Password</label>
                   {isLogin && <Link href="#" className="text-[10px] font-black text-primary hover:underline">Forgot?</Link>}
                 </div>
                 <div className="relative group">
                   <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors" size={18} />
                   <input 
+                    id="password"
+                    name="password"
                     type="password" 
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    autoComplete={isLogin ? "current-password" : "new-password"}
                     className="w-full bg-surface/50 border-2 border-secondary/10 px-14 py-4 text-sm font-bold outline-none focus:border-primary rounded-2xl transition-all"
                   />
                 </div>
