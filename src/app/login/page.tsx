@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,7 +10,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-export default function LoginPage() {
+function LoginContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -55,6 +55,19 @@ export default function LoginPage() {
 
         if (response?.error) {
           setError(response.error);
+        } else if (response?.ok) {
+          const sessionRes = await fetch("/api/auth/session");
+          if (sessionRes.ok) {
+            const sessionData = await sessionRes.json();
+            const role = sessionData?.user?.role;
+            if (role) {
+              router.push(role === "WORKER" ? "/dashboard/worker" : "/dashboard/hirer");
+              router.refresh();
+              return;
+            }
+          }
+          router.push("/");
+          router.refresh();
         }
       } else {
         // Sign Up Flow
@@ -70,11 +83,18 @@ export default function LoginPage() {
         }
 
         // Auto login after sign up
-        await signIn("credentials", {
+        const response = await signIn("credentials", {
           email,
           password,
           redirect: false,
         });
+
+        if (response?.error) {
+          setError(response.error);
+        } else if (response?.ok) {
+          router.push("/onboarding");
+          router.refresh();
+        }
       }
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
@@ -248,5 +268,17 @@ export default function LoginPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-surface mesh-gradient flex items-center justify-center">
+        <div className="text-heading font-black tracking-widest uppercase">LOADING...</div>
+      </main>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
