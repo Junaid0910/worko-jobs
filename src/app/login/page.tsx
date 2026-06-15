@@ -105,7 +105,7 @@ function LoginContent() {
 
   const handleOAuthLogin = (provider: string) => {
     setIsLoading(true);
-    signIn(provider, { callbackUrl: "/dashboard/hirer" });
+    signIn(provider, { callbackUrl: "/login" });
   };
 
   return (

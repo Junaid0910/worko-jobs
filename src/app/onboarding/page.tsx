@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,6 +21,30 @@ export default function OnboardingPage() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.name) {
+      setName(session.user.name);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!session?.user) return;
+    
+    const checkProfile = async () => {
+      try {
+        const userRole = (session.user as any).role;
+        const checkUrl = userRole === "WORKER" ? "/api/dashboard/worker" : "/api/dashboard/hirer";
+        const res = await fetch(checkUrl);
+        if (res.ok) {
+          router.push(userRole === "WORKER" ? "/dashboard/worker" : "/dashboard/hirer");
+        }
+      } catch (err) {
+        console.error("Profile check error:", err);
+      }
+    };
+    checkProfile();
+  }, [session, router]);
 
   const handleSubmit = async () => {
     if (!name || !city || (role === "WORKER" && !trade)) {
