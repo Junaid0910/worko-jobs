@@ -9,7 +9,6 @@ import { useSession, signOut } from "next-auth/react";
 
 export default function HirerSettingsPage() {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState("INFO");
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [email, setEmail] = useState("");
@@ -142,24 +141,11 @@ export default function HirerSettingsPage() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Sidebar list */}
+            {/* Sidebar */}
             <div className="bg-white/80 backdrop-blur-md border border-white/60 p-6 rounded-3xl shadow-sm h-fit space-y-4">
-              <button 
-                onClick={() => setActiveTab("INFO")}
-                className={`w-full text-left px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2 ${
-                  activeTab === "INFO" ? "bg-secondary/5 border-l-4 border-primary text-heading" : "text-muted hover:bg-secondary/5 transition-colors"
-                }`}
-              >
-                <User size={16} /> Account Info
-              </button>
-              <button 
-                onClick={() => setActiveTab("DELETE")}
-                className={`w-full text-left px-4 py-3 text-xs font-black uppercase tracking-widest flex items-center gap-2 ${
-                  activeTab === "DELETE" ? "bg-secondary/5 border-l-4 border-red-500 text-red-500" : "text-muted hover:bg-red-500/5 transition-colors"
-                }`}
-              >
-                <ShieldAlert size={16} /> Delete Account
-              </button>
+              <div className="px-4 py-3 text-xs font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                <User size={16} className="text-primary" /> Settings Menu
+              </div>
               <button 
                 onClick={() => signOut({ callbackUrl: "/login" })}
                 className="w-full text-left px-4 py-3 text-xs font-black uppercase tracking-widest text-muted hover:bg-secondary/5 transition-colors flex items-center gap-2"
@@ -169,72 +155,76 @@ export default function HirerSettingsPage() {
             </div>
 
             {/* Content Area */}
-            <div className="md:col-span-2">
-              {activeTab === "INFO" ? (
-                <form onSubmit={handleUpdate} className="bg-white/80 backdrop-blur-md border border-white/60 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                      <User size={16} className="text-primary" /> Full Name
-                    </label>
-                    <input 
-                      type="text" 
-                      value={name} 
-                      onChange={(e) => setName(e.target.value)} 
-                      required 
-                      placeholder="John Doe" 
-                      className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
-                    />
-                  </div>
+            <div className="md:col-span-2 space-y-8">
+              {/* Account Info Card */}
+              <form onSubmit={handleUpdate} className="bg-white/80 backdrop-blur-md border border-white/60 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
+                <h3 className="text-2xl font-display font-black text-heading uppercase border-b border-muted/10 pb-4">Profile Information</h3>
 
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                      <MapPin size={16} className="text-primary" /> City / Location
-                    </label>
-                    <input 
-                      type="text" 
-                      value={city} 
-                      onChange={(e) => setCity(e.target.value)} 
-                      required 
-                      placeholder="Mumbai" 
-                      className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                      Email Address (Read-only)
-                    </label>
-                    <input 
-                      type="email" 
-                      value={email} 
-                      disabled
-                      className="w-full bg-surface-dark/5 border-2 border-secondary/5 px-6 py-4 font-bold outline-none text-muted rounded-xl cursor-not-allowed" 
-                    />
-                  </div>
-
-                  <button 
-                    type="submit" 
-                    disabled={saveLoading}
-                    className="w-full bg-secondary text-white py-5 mt-4 text-xs font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 rounded-xl shadow-glow"
-                  >
-                    {saveLoading ? "SAVING..." : "SAVE SETTINGS"}
-                  </button>
-                </form>
-              ) : (
-                <div className="bg-white/80 backdrop-blur-md border border-red-500/20 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
-                  <h3 className="text-2xl font-display font-black text-red-600 uppercase">DELETE YOUR ACCOUNT</h3>
-                  <p className="text-sm text-muted leading-relaxed font-semibold">
-                    Deleting your account will permanently remove all your profile data, active job listings, applicants, and reviews. This action cannot be undone.
-                  </p>
-                  <button 
-                    onClick={handleDeleteAccount}
-                    disabled={saveLoading}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white py-5 text-xs font-display font-black uppercase tracking-widest transition-all rounded-xl shadow-glow disabled:opacity-50"
-                  >
-                    {saveLoading ? "DELETING..." : "PERMANENTLY DELETE MY ACCOUNT"}
-                  </button>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    <User size={16} className="text-primary" /> Full Name
+                  </label>
+                  <input 
+                    type="text" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required 
+                    placeholder="John Doe" 
+                    className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                  />
                 </div>
-              )}
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    <MapPin size={16} className="text-primary" /> City / Location
+                  </label>
+                  <input 
+                    type="text" 
+                    value={city} 
+                    onChange={(e) => setCity(e.target.value)} 
+                    required 
+                    placeholder="Mumbai" 
+                    className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    Email Address (Read-only)
+                  </label>
+                  <input 
+                    type="email" 
+                    value={email} 
+                    disabled
+                    className="w-full bg-surface-dark/5 border-2 border-secondary/5 px-6 py-4 font-bold outline-none text-muted rounded-xl cursor-not-allowed" 
+                  />
+                </div>
+
+                <button 
+                  type="submit" 
+                  disabled={saveLoading}
+                  className="w-full bg-secondary text-white py-5 mt-4 text-xs font-display font-black uppercase tracking-widest hover:bg-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 rounded-xl shadow-glow"
+                >
+                  {saveLoading ? "SAVING..." : "SAVE SETTINGS"}
+                </button>
+              </form>
+
+              {/* Delete Account Card */}
+              <div className="bg-white/80 backdrop-blur-md border-2 border-red-500/20 p-8 md:p-12 rounded-3xl shadow-premium space-y-6">
+                <h3 className="text-2xl font-display font-black text-red-600 uppercase flex items-center gap-2">
+                  <ShieldAlert size={24} /> Danger Zone: Delete Account
+                </h3>
+                <p className="text-sm text-muted leading-relaxed font-semibold">
+                  Deleting your account will permanently remove all your profile data, active job listings, applicants, and reviews. This action cannot be undone.
+                </p>
+                <button 
+                  onClick={handleDeleteAccount}
+                  disabled={saveLoading}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white py-5 text-xs font-display font-black uppercase tracking-widest transition-all rounded-xl shadow-glow disabled:opacity-50"
+                >
+                  {saveLoading ? "DELETING..." : "PERMANENTLY DELETE MY ACCOUNT"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
