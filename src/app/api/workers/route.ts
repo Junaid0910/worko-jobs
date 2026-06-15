@@ -66,7 +66,22 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const data = await req.json();
-    const { userId, trade, experience, dailyWage, bio, languages, isAvailable } = data;
+    const { 
+      userId, 
+      trade, 
+      customTrade, 
+      title, 
+      experience, 
+      dailyWage, 
+      bio, 
+      languages, 
+      skills, 
+      education, 
+      certification, 
+      availabilityHours, 
+      isAvailable,
+      portfolio
+    } = data;
 
     if (!userId) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
@@ -76,11 +91,18 @@ export async function PUT(req: Request) {
       where: { userId: userId },
       data: {
         trade,
-        experience: parseInt(experience),
-        dailyWage: parseInt(dailyWage),
+        customTrade,
+        title,
+        experience: experience !== undefined ? parseInt(experience) : 0,
+        dailyWage: dailyWage !== undefined ? parseInt(dailyWage) : 500,
         bio,
-        languages: Array.isArray(languages) ? languages : [languages],
+        languages: Array.isArray(languages) ? languages : [],
+        skills: Array.isArray(skills) ? skills : [],
+        education,
+        certification,
+        availabilityHours,
         isAvailable: isAvailable !== undefined ? isAvailable : true,
+        portfolio: Array.isArray(portfolio) ? portfolio : [],
       }
     });
 

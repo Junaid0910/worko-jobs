@@ -72,25 +72,31 @@ enum Role {
 }
 
 model Worker {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String        @unique @db.ObjectId
-  user           User          @relation(fields: [userId], references: [id])
-  trade          Trade
-  experience     Int
-  dailyWage      Int
-  bio            String?
-  languages      String[]
-  isAvailable    Boolean       @default(true)
-  isVerified     Boolean       @default(false)
-  profilePhoto   String?
-  itiCertificate String?
-  portfolio      String[]
-  rating         Float         @default(0)
-  totalReviews   Int           @default(0)
-  totalJobs      Int           @default(0)
-  isFeatured     Boolean       @default(false)
-  applications   Application[]
-  reviews        Review[]
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String        @unique @db.ObjectId
+  user              User          @relation(fields: [userId], references: [id])
+  trade             Trade
+  customTrade       String?
+  title             String?
+  experience        Int
+  dailyWage         Int
+  bio               String?
+  languages         String[]
+  skills            String[]
+  education         String?
+  certification     String?
+  availabilityHours String?
+  isAvailable       Boolean       @default(true)
+  isVerified        Boolean       @default(false)
+  profilePhoto      String?
+  itiCertificate    String?
+  portfolio         String[]
+  rating            Float         @default(0)
+  totalReviews      Int           @default(0)
+  totalJobs         Int           @default(0)
+  isFeatured        Boolean       @default(false)
+  applications      Application[]
+  reviews           Review[]
 }
 
 model Hirer {

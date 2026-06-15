@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowLeft, User, Hammer, Calendar, IndianRupee, FileText, CheckCircle2, Globe } from "lucide-react";
+import { ArrowLeft, User, Hammer, Calendar, IndianRupee, FileText, CheckCircle2, Globe, Plus, X, GraduationCap, Briefcase } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -18,14 +18,24 @@ export default function WorkerProfilePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [formData, setFormData] = useState({
-    trade: "ELECTRICIAN",
-    experience: "",
-    dailyWage: "",
-    bio: "",
-    languages: "",
-    isAvailable: true,
-  });
+  const [trade, setTrade] = useState("ELECTRICIAN");
+  const [customTrade, setCustomTrade] = useState("");
+  const [title, setTitle] = useState("");
+  const [experience, setExperience] = useState("");
+  const [dailyWage, setDailyWage] = useState("");
+  const [bio, setBio] = useState("");
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [education, setEducation] = useState("");
+  const [certification, setCertification] = useState("");
+  const [availabilityHours, setAvailabilityHours] = useState("Full-time (40 hrs/week)");
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [portfolio, setPortfolio] = useState<string[]>([]);
+
+  // Input states for tags
+  const [skillInput, setSkillInput] = useState("");
+  const [langInput, setLangInput] = useState("");
+  const [portfolioInput, setPortfolioInput] = useState("");
 
   useEffect(() => {
     if (!session?.user) return;
@@ -42,14 +52,19 @@ export default function WorkerProfilePage() {
 
         const worker = data.worker;
         if (worker) {
-          setFormData({
-            trade: worker.trade || "ELECTRICIAN",
-            experience: worker.experience?.toString() || "0",
-            dailyWage: worker.dailyWage?.toString() || "500",
-            bio: worker.bio || "",
-            languages: worker.languages?.join(", ") || "English, Hindi",
-            isAvailable: worker.isAvailable !== undefined ? worker.isAvailable : true,
-          });
+          setTrade(worker.trade || "ELECTRICIAN");
+          setCustomTrade(worker.customTrade || "");
+          setTitle(worker.title || "");
+          setExperience(worker.experience?.toString() || "0");
+          setDailyWage(worker.dailyWage?.toString() || "500");
+          setBio(worker.bio || "");
+          setLanguages(worker.languages || []);
+          setSkills(worker.skills || []);
+          setEducation(worker.education || "");
+          setCertification(worker.certification || "");
+          setAvailabilityHours(worker.availabilityHours || "Full-time (40 hrs/week)");
+          setIsAvailable(worker.isAvailable !== undefined ? worker.isAvailable : true);
+          setPortfolio(worker.portfolio || []);
         }
       } catch (err: any) {
         setError(err.message || "An error occurred.");
@@ -61,12 +76,46 @@ export default function WorkerProfilePage() {
     fetchProfile();
   }, [session]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value
-    }));
+  const handleAddSkill = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (skillInput.trim()) {
+      if (!skills.includes(skillInput.trim())) {
+        setSkills([...skills, skillInput.trim()]);
+      }
+      setSkillInput("");
+    }
+  };
+
+  const handleRemoveSkill = (skillToRemove: string) => {
+    setSkills(skills.filter(s => s !== skillToRemove));
+  };
+
+  const handleAddLang = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (langInput.trim()) {
+      if (!languages.includes(langInput.trim())) {
+        setLanguages([...languages, langInput.trim()]);
+      }
+      setLangInput("");
+    }
+  };
+
+  const handleRemoveLang = (langToRemove: string) => {
+    setLanguages(languages.filter(l => l !== langToRemove));
+  };
+
+  const handleAddPortfolio = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (portfolioInput.trim()) {
+      if (!portfolio.includes(portfolioInput.trim())) {
+        setPortfolio([...portfolio, portfolioInput.trim()]);
+      }
+      setPortfolioInput("");
+    }
+  };
+
+  const handleRemovePortfolio = (itemToRemove: string) => {
+    setPortfolio(portfolio.filter(p => p !== itemToRemove));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -79,22 +128,25 @@ export default function WorkerProfilePage() {
       setSuccess("");
 
       const userId = (session.user as any).id;
-      const parsedLanguages = formData.languages
-        .split(",")
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
 
       const res = await fetch("/api/workers", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId,
-          trade: formData.trade,
-          experience: formData.experience,
-          dailyWage: formData.dailyWage,
-          bio: formData.bio,
-          languages: parsedLanguages,
-          isAvailable: formData.isAvailable,
+          trade,
+          customTrade: trade === "OTHER" ? customTrade : "",
+          title,
+          experience: parseInt(experience) || 0,
+          dailyWage: parseInt(dailyWage) || 500,
+          bio,
+          languages,
+          skills,
+          education,
+          certification,
+          availabilityHours,
+          isAvailable,
+          portfolio,
         }),
       });
 
@@ -142,7 +194,7 @@ export default function WorkerProfilePage() {
             <h1 className="text-5xl md:text-7xl font-display font-black tracking-tighter uppercase leading-none text-heading">
               EDIT PROFILE
             </h1>
-            <p className="text-xl text-muted font-medium">Keep your trade details, bio, and rates up to date</p>
+            <p className="text-xl text-muted font-medium font-display uppercase tracking-tight">Fiverr & Upwork style professional settings</p>
           </div>
 
           {success && (
@@ -159,16 +211,31 @@ export default function WorkerProfilePage() {
 
           {/* Edit Form */}
           <form onSubmit={handleSave} className="bg-white/80 backdrop-blur-md border border-white/60 p-8 md:p-14 rounded-3xl shadow-premium space-y-8">
-            {/* Category */}
+            
+            {/* Title / Tagline */}
+            <div className="space-y-2">
+              <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                <User size={16} className="text-primary" /> Professional Title / Tagline
+              </label>
+              <input 
+                type="text" 
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Expert Residential Electrician & AC Technician" 
+                className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl"
+              />
+            </div>
+
+            {/* Category / Custom Trade */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                  <Hammer size={16} className="text-primary" /> Category / Trade
+                  <Hammer size={16} className="text-primary" /> Primary Trade Category
                 </label>
                 <select 
                   name="trade" 
-                  value={formData.trade} 
-                  onChange={handleChange}
+                  value={trade} 
+                  onChange={(e) => setTrade(e.target.value)}
                   className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl appearance-none"
                 >
                   <option value="ELECTRICIAN">ELECTRICIAN</option>
@@ -177,35 +244,37 @@ export default function WorkerProfilePage() {
                   <option value="PAINTER">PAINTER</option>
                   <option value="MASON">MASON</option>
                   <option value="WELDER">WELDER</option>
+                  <option value="OTHER">OTHER (CUSTOM WORK)</option>
                 </select>
               </div>
 
-              {/* Availability */}
-              <div className="space-y-2 flex flex-col justify-end">
-                <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-secondary/10 rounded-xl hover:border-primary/40 transition-colors">
+              {trade === "OTHER" && (
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                    <Plus size={16} className="text-primary" /> Specify Custom Trade / Service
+                  </label>
                   <input 
-                    type="checkbox" 
-                    name="isAvailable"
-                    checked={formData.isAvailable} 
-                    onChange={handleChange}
-                    className="w-6 h-6 rounded-md accent-primary" 
+                    type="text" 
+                    value={customTrade}
+                    onChange={(e) => setCustomTrade(e.target.value)}
+                    required={trade === "OTHER"}
+                    placeholder="e.g. CCTV Installer, Pest Control, Tile Fitter" 
+                    className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl"
                   />
-                  <span className="text-sm font-bold text-heading">Available to Work Immediately</span>
-                </label>
-              </div>
+                </div>
+              )}
             </div>
 
-            {/* Experience and Wage */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Experience, Wage and Availability */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
                   <Calendar size={16} className="text-primary" /> Experience (Years)
                 </label>
                 <input 
                   type="number" 
-                  name="experience" 
-                  value={formData.experience} 
-                  onChange={handleChange}
+                  value={experience} 
+                  onChange={(e) => setExperience(e.target.value)}
                   required 
                   min="0"
                   max="50"
@@ -216,49 +285,205 @@ export default function WorkerProfilePage() {
 
               <div className="space-y-2">
                 <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                  <IndianRupee size={16} className="text-primary" /> Daily Wage (₹)
+                  <IndianRupee size={16} className="text-primary" /> Daily Wage Rate (₹)
                 </label>
                 <input 
                   type="number" 
-                  name="dailyWage" 
-                  value={formData.dailyWage} 
-                  onChange={handleChange}
+                  value={dailyWage} 
+                  onChange={(e) => setDailyWage(e.target.value)}
                   required 
                   min="100"
                   placeholder="e.g. 700" 
                   className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
                 />
               </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                  <Briefcase size={16} className="text-primary" /> Availability Hours
+                </label>
+                <select 
+                  value={availabilityHours}
+                  onChange={(e) => setAvailabilityHours(e.target.value)}
+                  className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl appearance-none"
+                >
+                  <option value="Full-time (40 hrs/week)">Full-time (40 hrs/week)</option>
+                  <option value="Part-time (20 hrs/week)">Part-time (20 hrs/week)</option>
+                  <option value="Flexible / Hourly Gigs">Flexible / Hourly Gigs</option>
+                  <option value="Weekends only">Weekends only</option>
+                </select>
+              </div>
             </div>
 
-            {/* Languages */}
+            {/* Active Status */}
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                <Globe size={16} className="text-primary" /> Languages Spoken (Comma separated)
+              <label className="flex items-center gap-3 cursor-pointer p-4 border-2 border-secondary/10 rounded-xl hover:border-primary/40 transition-colors">
+                <input 
+                  type="checkbox" 
+                  checked={isAvailable} 
+                  onChange={(e) => setIsAvailable(e.target.checked)}
+                  className="w-6 h-6 rounded-md accent-primary" 
+                />
+                <span className="text-sm font-bold text-heading">Show Profile in Search Directory (Available Now)</span>
               </label>
-              <input 
-                type="text" 
-                name="languages" 
-                value={formData.languages} 
-                onChange={handleChange}
-                placeholder="e.g. English, Spanish" 
-                className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
-              />
             </div>
 
-            {/* Bio */}
+            {/* Bio / Description */}
             <div className="space-y-2">
               <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
-                <FileText size={16} className="text-primary" /> Professional Bio / Description
+                <FileText size={16} className="text-primary" /> Professional Bio / Service Description
               </label>
               <textarea 
-                name="bio" 
-                value={formData.bio} 
-                onChange={handleChange}
+                value={bio} 
+                onChange={(e) => setBio(e.target.value)}
                 rows={5}
-                placeholder="Describe your expertise, typical jobs you do, and service standards..." 
+                required
+                placeholder="Describe your expertise, standard working procedure, tool kits you own, and guarantee details..." 
                 className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl resize-none"
               />
+            </div>
+
+            {/* Skills Tag Input */}
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                <Plus size={16} className="text-primary" /> Skills & Tools Tags (Upwork style)
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={skillInput} 
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  placeholder="e.g. Copper Piping, MCB Wiring, AutoCAD" 
+                  className="flex-1 bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl"
+                  onKeyDown={(e) => e.key === "Enter" && handleAddSkill(e)}
+                />
+                <button 
+                  type="button" 
+                  onClick={handleAddSkill} 
+                  className="bg-primary text-white px-6 font-display font-black rounded-xl"
+                >
+                  ADD
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {skills.length === 0 ? (
+                  <span className="text-xs text-muted italic">No skills listed yet. Add tags to stand out in searches.</span>
+                ) : (
+                  skills.map((skill) => (
+                    <span key={skill} className="bg-primary/10 text-primary border border-primary/20 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
+                      {skill}
+                      <button type="button" onClick={() => handleRemoveSkill(skill)} className="hover:text-red-500"><X size={12} /></button>
+                    </span>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Languages Tag Input */}
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                <Globe size={16} className="text-primary" /> Languages (e.g. English (Fluent), Hindi (Native))
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  value={langInput} 
+                  onChange={(e) => setLangInput(e.target.value)}
+                  placeholder="e.g. English (Conversational)" 
+                  className="flex-1 bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl"
+                  onKeyDown={(e) => e.key === "Enter" && handleAddLang(e)}
+                />
+                <button 
+                  type="button" 
+                  onClick={handleAddLang} 
+                  className="bg-primary text-white px-6 font-display font-black rounded-xl"
+                >
+                  ADD
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {languages.length === 0 ? (
+                  <span className="text-xs text-muted italic">No languages added.</span>
+                ) : (
+                  languages.map((lang) => (
+                    <span key={lang} className="bg-secondary/5 text-heading border border-secondary/15 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
+                      {lang}
+                      <button type="button" onClick={() => handleRemoveLang(lang)} className="hover:text-red-500"><X size={12} /></button>
+                    </span>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Education & Certification */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                  <GraduationCap size={16} className="text-primary" /> Education (Upwork style)
+                </label>
+                <input 
+                  type="text" 
+                  value={education} 
+                  onChange={(e) => setEducation(e.target.value)}
+                  placeholder="e.g. ITI Electrician Trade Certificate" 
+                  className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-primary" /> Certifications
+                </label>
+                <input 
+                  type="text" 
+                  value={certification} 
+                  onChange={(e) => setCertification(e.target.value)}
+                  placeholder="e.g. National Safety Council Electrical License" 
+                  className="w-full bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl" 
+                />
+              </div>
+            </div>
+
+            {/* Portfolio Links */}
+            <div className="space-y-4">
+              <label className="text-xs font-black uppercase tracking-widest text-heading flex items-center gap-2">
+                <Plus size={16} className="text-primary" /> Portfolio Project Image Links
+              </label>
+              <div className="flex gap-2">
+                <input 
+                  type="url" 
+                  value={portfolioInput} 
+                  onChange={(e) => setPortfolioInput(e.target.value)}
+                  placeholder="e.g. https://images.unsplash.com/photo-..." 
+                  className="flex-1 bg-surface border-2 border-secondary/10 px-6 py-4 font-bold outline-none focus:border-primary rounded-xl"
+                  onKeyDown={(e) => e.key === "Enter" && handleAddPortfolio(e)}
+                />
+                <button 
+                  type="button" 
+                  onClick={handleAddPortfolio} 
+                  className="bg-primary text-white px-6 font-display font-black rounded-xl"
+                >
+                  ADD
+                </button>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+                {portfolio.length === 0 ? (
+                  <div className="col-span-full text-xs text-muted italic text-center py-4 border border-dashed border-secondary/20 rounded-xl">No portfolio projects added yet. Link image URLs to show off your quality of work!</div>
+                ) : (
+                  portfolio.map((img) => (
+                    <div key={img} className="relative h-24 border border-secondary/20 rounded-xl overflow-hidden group">
+                      <img src={img} alt="Portfolio Work" className="w-full h-full object-cover" />
+                      <button 
+                        type="button" 
+                        onClick={() => handleRemovePortfolio(img)} 
+                        className="absolute top-1 right-1 p-1 bg-red-600 text-white rounded-full hover:bg-red-700 shadow-sm"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
 
             <button 

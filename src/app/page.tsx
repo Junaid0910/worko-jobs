@@ -290,19 +290,28 @@ export default function Home() {
                   <Shield size={48} className="text-white" />
                 </div>
                 <h3 className="text-3xl font-display font-black uppercase text-white">WORKO PROMISE</h3>
-                <ul className="space-y-6">
-                  <li className="flex items-start gap-4 text-white/80 font-medium">
+                <ul className="space-y-4">
+                  <motion.li 
+                    whileHover={{ x: 6, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+                    className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl transition-all cursor-default"
+                  >
                     <CheckCircle2 className="text-primary shrink-0" size={24} />
-                    <span>No upfront payments for any task.</span>
-                  </li>
-                  <li className="flex items-start gap-4 text-white/80 font-medium">
+                    <span className="text-white font-semibold text-lg">No upfront payments for any task.</span>
+                  </motion.li>
+                  <motion.li 
+                    whileHover={{ x: 6, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+                    className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl transition-all cursor-default"
+                  >
                     <CheckCircle2 className="text-primary shrink-0" size={24} />
-                    <span>Direct contact with experts without middlemen.</span>
-                  </li>
-                  <li className="flex items-start gap-4 text-white/80 font-medium">
+                    <span className="text-white font-semibold text-lg">Direct contact with experts without middlemen.</span>
+                  </motion.li>
+                  <motion.li 
+                    whileHover={{ x: 6, backgroundColor: "rgba(255, 255, 255, 0.08)" }}
+                    className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl transition-all cursor-default"
+                  >
                     <CheckCircle2 className="text-primary shrink-0" size={24} />
-                    <span>Zero commission for workers on initial jobs.</span>
-                  </li>
+                    <span className="text-white font-semibold text-lg">Zero commission for workers on initial jobs.</span>
+                  </motion.li>
                 </ul>
               </motion.div>
             </div>

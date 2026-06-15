@@ -349,7 +349,7 @@ export default function WorkersPage() {
                     <div className="flex justify-between items-start">
                       <div className="space-y-1">
                         <div className="bg-secondary/5 inline-block px-3 py-1 text-[9px] font-black uppercase tracking-widest text-heading rounded-full">
-                          {worker.trade}
+                          {worker.trade === "OTHER" && worker.customTrade ? worker.customTrade : worker.trade}
                         </div>
                         <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight leading-none group-hover:text-primary transition-colors line-clamp-1">
                           <Link href={`/workers/${worker.id}`}>
